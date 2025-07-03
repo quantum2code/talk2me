@@ -51,7 +51,7 @@ talk2me/
 │   └── react-native/       # Mobile app
 │   └── react-web/          # Web app
 ├── backend/
-│   └── api/                # Node.js or Flask API
+│   └── api/                # Node.js or First API
 ├── services/
 │   ├── whisper/            # Speech-to-text integration
 │   ├── gpt/                # Feedback via GPT-4
