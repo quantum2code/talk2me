@@ -10,7 +10,7 @@
   Use your microphone to capture audio directly from your mobile device or browser.
 
 - ✍️ **Accurate Transcription**  
-  Audio is transcribed using OpenAI’s Whisper API for highly accurate, multilingual speech-to-text conversion.
+  Audio is transcribed using Whisper API for highly accurate, multilingual speech-to-text conversion.
 
 - 🤖 **Smart Feedback**  
   - Grammar corrections
@@ -19,41 +19,6 @@
 
 - 📚 **User History**  
   All transcripts and feedback are saved per user for continuous learning and improvement.
-
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend
-- **React** – for frontend
-
-### Backend
-- **Express.js** or **FastAPI** – for API handling and user management
-
-### AI & Libraries
-- **Whisper** – speech-to-text transcription
-- **Gemini** – text analysis and feedback generation
-
----
-
-## 📦 Project Structure
-
-```plaintext
-talk2me/
-├── apps/
-│   └── frontend/              # React app
-│
-├── services/
-│   ├── api/                   # Express server (auth, db, payments, etc.)
-│   └── voice/                 # FastAPI microservice for transcription
-│
-├── shared/
-│   ├── db/                    # db orm and schema              
-│
-├── docker-compose             # Spin everything up locally
-└── README.md 
-```
 
 
 ## 👥 Contributors
