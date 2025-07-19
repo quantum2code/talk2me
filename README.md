@@ -1,70 +1,34 @@
-# Getting Started with Create React App
+# 🗣️ Talk2Me – AI Speech Practice App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Talk2Me** is an AI-powered mobile/web app designed to help users improve their spoken English through real-time speech analysis. Record your voice, get accurate transcriptions, and receive personalized feedback on grammar, fluency, and tone.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## 🌟 Features
 
-### `npm start`
+- 🎤 **Record Speech**  
+  Use your microphone to capture audio directly from your mobile device or browser.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- ✍️ **Accurate Transcription**  
+  Audio is transcribed using Whisper API for highly accurate, multilingual speech-to-text conversion.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- 🤖 **Smart Feedback**  
+  - Grammar corrections  
+  - Fluency scoring  
+  - Feedback on pacing, tone, and coherence
 
-### `npm test`
+- 📚 **User History**  
+  All transcripts and feedback are saved per user for continuous learning and improvement.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🚀 Getting Started
 
-### `npm run build`
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).  
+You can run:  
+- `npm start` – start dev server  
+- `npm run build` – build for production
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 👥 Contributors
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Thanks to all the amazing people who contribute to this project!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[![Contributors](https://contrib.rocks/image?repo=quantum2code/talk2me)](https://github.com/quantum2code/talk2me/graphs/contributors)
