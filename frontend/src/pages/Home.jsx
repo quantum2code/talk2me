@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaGithub, FaGlobe, FaTwitter } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
@@ -33,7 +32,7 @@ function Home() {
           </div>
         </nav>
 
-        {/* main cntent*/}
+        {/* Hero Content */}
         <div className="text-center px-4 pt-6 sm:pt-10 md:pt-14 lg:pt-18 relative z-20 pb-64">
           <h1 className="uppercase text-4xl sm:text-5xl md:text-6xl font-extrabold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent leading-tight mb-6">
             TALK BETTER, EVERY DAY
@@ -57,14 +56,13 @@ function Home() {
           </div>
         </div>
 
-        {/* Girl */}
+        {/* Girl + Wave */}
         <div className="absolute bottom-0 sm:bottom-6 left-0 right-0 flex items-end justify-between px-4 sm:px-8 z-10">
           <img
             src="/assets/girl.png"
             alt="Girl with phone"
             className="w-[140px] sm:w-[200px] md:w-[260px] lg:w-[320px] xl:w-[360px] object-contain"
           />
-
           <img
             src="/assets/waveform.png"
             alt="Waveform"
