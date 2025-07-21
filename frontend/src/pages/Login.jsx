@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useGoogleLogin } from '@react-oauth/google';
 
 function Login() {
   const navigate = useNavigate();
+  // For GOOGLE Login Handeling
+  const googleLogin = useGoogleLogin({
+    onSuccess: tokenResponse => {
+      console.log('Access Token:', tokenResponse.access_token)
+      navigate('/main') // Redirect after login
+    },
+    onError: error => {
+      console.error('Google Login Error:', error)
+    }
+  })
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -43,8 +54,7 @@ function Login() {
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-[#1a0030] text-white rounded-2xl p-8 w-full max-w-md shadow-xl"
-      >
+        className="bg-[#1a0030] text-white rounded-2xl p-8 w-full max-w-md shadow-xl">
         <h2 className="text-3xl font-bold mb-2 text-center">Welcome Back 👋</h2>
         <p className="text-sm text-gray-400 mb-6 text-center">Log in to continue your speech journey</p>
 
@@ -95,9 +105,11 @@ function Login() {
           <hr className="flex-grow border-gray-600" />
         </div>
 
-        {/* Google Login */}
+        {/* Google Login don't change it without discussing- Saikat*/}
+
         <button
           type="button"
+          onClick={() => googleLogin()} // Google Login Function...
           className="w-full border border-gray-700 bg-black text-white py-2 rounded-lg flex items-center justify-center gap-3"
         >
           <img
@@ -107,6 +119,7 @@ function Login() {
           />
           Continue with Google
         </button>
+
 
         {/* Signup Link */}
         <p className="text-center text-sm mt-6 text-gray-400">

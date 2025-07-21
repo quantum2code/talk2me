@@ -1,6 +1,7 @@
 // src/App.jsx
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 import Home from './pages/Home';
@@ -21,7 +22,7 @@ function App() {
   return (
     <Router>
       <Routes>
-
+{/* GOOGLE AUTH */}
 {/* pages elements */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
