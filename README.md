@@ -20,6 +20,22 @@
 - 📚 **User History**  
   All transcripts and feedback are saved per user for continuous learning and improvement.
 
+# steps to run in dev
+
+- Add your ` .env ` file inside ` backend/express/ ` folder
+- add 2 Env variables `PORT` & ` GROQ_API_KEY ` 
+- get your groq api key from [here](https://console.groq.com/keys)
+- `PORT=3000` as a standard value
+
+``` bash
+cd frontend/react-fe
+npm run dev 
+```
+``` bash
+cd backend/express
+npm run dev
+```
+- now goto the frontend url to test it
 
 ## 👥 Contributors
 
