@@ -1,15 +1,43 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, provider } from '../signUpFirebase.js';
+import { getFirestore, setDoc, doc } from 'firebase/firestore';
+
+
 
 function Signup() {
   const navigate = useNavigate();
+  // For GOOGLE Login Handeling But using Firebase don't change the code without discussing - Saikat...
+  const db = getFirestore()
+  const handleGoogleSignup = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider)
+      const user = result.user
+
+      // Save user info to Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        name: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        createdAt: new Date()
+      })
+
+      console.log('User saved to Fire Base db')
+      navigate('/main') // Redirect after signup
+    } catch (error) {
+      console.error('Google Signup Error:', error)
+    }
+  }
+
+
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSignup = (e) => {
     e.preventDefault();
     // VALIDATE USER
-    navigate('/main'); 
+    navigate('/main');
   };
 
   return (
@@ -94,9 +122,11 @@ function Signup() {
           <hr className="flex-grow border-gray-600" />
         </div>
 
-        {/* Google Signup */}
+        {/* Google SignUp don't change it without discussing- Saikat*/}
+
         <button
           type="button"
+          onClick={handleGoogleSignup} // Google Login Function...
           className="w-full border border-gray-700 bg-black text-white py-2 rounded-lg flex items-center justify-center gap-3"
         >
           <img
@@ -104,7 +134,7 @@ function Signup() {
             alt="Google"
             className="w-5 h-5"
           />
-          Sign Up with Google
+          Continue with Google
         </button>
 
         {/* Link to Login */}

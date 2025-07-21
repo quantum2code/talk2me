@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { FaMicrophone } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { auth } from '../signUpFirebase';
 
 export default function MainPage() {
   const navigate = useNavigate();
+  // Fetching the data from Google Account
+  const user = auth.currentUser
+  const avatarURL = user?.photoURL || '/assets/girl-avatar.png'
+  const displayName = user?.displayName || 'Guest'
+
   const [showPopup, setShowPopup] = useState(false);
   const [popupStep, setPopupStep] = useState(1);
   const [feedbackStyle, setFeedbackStyle] = useState([]);
@@ -59,15 +65,18 @@ export default function MainPage() {
         {/* Top Right */}
         <div className="absolute top-6 right-6 flex items-center gap-4 z-30">
           <button className="text-white text-lg">💬</button>
-          <img src="/assets/girl-avatar.png" alt="Profile" className="w-9 h-9 rounded-full object-cover cursor-pointer" onClick={() => navigate("/profile")} />
+          <img src={avatarURL} alt="Profile" className="w-9 h-9 rounded-full object-cover cursor-pointer" onClick={() => navigate("/profile")} />
         </div>
 
         {/* Avatar */}
         <div className="mt-4 mb-6 z-30">
-          <img src="/assets/girl-avatar.png" alt="AI Avatar" className="w-28 h-28 rounded-full object-cover" />
+          <img src={avatarURL} alt="AI Avatar" className="w-28 h-28 rounded-full object-cover" />
         </div>
 
         <h2 className="text-lg sm:text-xl font-semibold mb-6 text-center z-30">
+          <p className="text-sm mt-2 text-white font-medium">
+            Welcome, {displayName.split(" ")[0]} 👋
+          </p>
           What would you like to practice today?
         </h2>
 
@@ -172,7 +181,7 @@ export default function MainPage() {
                     <button
                       onClick={() => {
                         closePopup();
-                        navigate("/recording"); 
+                        navigate("/recording");
                       }}
                       className="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600"
                     >
