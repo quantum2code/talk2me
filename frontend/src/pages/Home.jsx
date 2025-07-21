@@ -1,5 +1,15 @@
 import { FaGithub, FaGlobe, FaTwitter } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, Links, Route } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
+
+
+// Including the Route Paths
+
+import Contact from '../components/Contact.jsx';
+
+<Route path="/contact" element={<Contact />} />
+
+
 
 function Home() {
   const navigate = useNavigate();
@@ -22,7 +32,7 @@ function Home() {
             <li><a href="#services" className="hover:text-pink-400 transition">Services</a></li>
             <li><a href="#features" className="hover:text-pink-400 transition">Features</a></li>
             <li><a href="#roadmap" className="hover:text-pink-400 transition">Roadmap</a></li>
-            <li><a href="#contact" className="hover:text-pink-400 transition">Contact</a></li>
+            <li><Link to="/contact" className="hover:text-pink-400 transition">Contact</Link></li>
           </ul>
 
           <div className="flex gap-4 text-xl">
