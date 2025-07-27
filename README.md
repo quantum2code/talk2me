@@ -29,6 +29,7 @@
 
 ``` bash
 cd frontend/react-fe
+npm install
 npm run dev 
 ```
 ``` bash
