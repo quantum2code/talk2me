@@ -9,6 +9,7 @@ export default function ProfileSettings() {
 
   return (
     <div className="relative min-h-screen bg-[#0D0D0D] text-white flex">
+      
       {/* Blurred blobs */}
       <div className="absolute w-[500px] h-[500px] bg-purple-600 opacity-20 rounded-full blur-[250px] top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-0" />
       <div className="absolute w-[400px] h-[400px] bg-blue-500 opacity-20 rounded-full blur-[200px] top-10 left-10 z-0" />
