@@ -4,22 +4,30 @@ import { BsPauseCircle } from "react-icons/bs";
 import AudioVisualizer from "./components/AudioVisualizer";
 import { AUDIO_FILE_TYPE, MAX_FILE_SIZE } from "shared/src/constants";
 import { useProcessAudio } from "./hooks/useProcessAudio";
-import { Role, type ErrorDetail } from "shared/src/types";
-import MessageBubble from "./components/MessageBubble";
+import { type ErrorDetail, type Message } from "shared/src/types";
 import MessageContextWindow from "./components/MessageContextWindow";
+import CompChatBubble from "./components/MessageBubble";
 import { useConversation } from "./hooks/useConversation";
+import { useFetchMessages } from "./hooks/useFetchMessages";
+import { getConversationById } from "./utils/axios";
 
 function App() {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
   const [isRecording, setIsRecording] = useState(false);
-  const { messages, processAudio } = useProcessAudio();
+  const { messages, processAudio, setMessages } = useProcessAudio();
+  const [conversations, setConversations] = useState<
+    { title: string; id: string }[]
+  >([]);
   const [messageErrorCtx, setMessageErrorCtx] = useState<ErrorDetail | null>(
     null
   );
-  const [isCtxWindowOpen, setIsCtxWindowOpen] = useState(true);
-  const { conversationID, endConversation, startNewConversation } =
+  const { conversationId, setConversationId, getConversationId } =
     useConversation();
+  const { conversationsQuery, messagesQuery } = useFetchMessages({
+    currentConversationId: conversationId!,
+  });
+  const [isCtxWindowOpen, setIsCtxWindowOpen] = useState(true);
   const chunksRef = useRef<Blob[]>([]);
 
   const getStream = async () => {
@@ -32,6 +40,18 @@ function App() {
       console.error("ERROR getting stream: ", e);
     }
   };
+
+  useEffect(() => {
+    if (messagesQuery.data) {
+      setMessages(messagesQuery.data);
+    }
+  }, [messagesQuery.data]);
+
+  useEffect(() => {
+    if (conversationsQuery.data) {
+      setConversations(conversationsQuery.data);
+    }
+  }, [conversationsQuery.data]);
 
   useEffect(() => {
     if (stream) {
@@ -55,12 +75,8 @@ function App() {
           type: AUDIO_FILE_TYPE,
         });
 
-        // Use the latest conversationID
-        let convID = conversationID;
-        if (!convID) {
-          convID = await startNewConversation();
-        }
-        await processAudio(audioBlob, convID);
+        const convId = await getConversationId();
+        await processAudio(audioBlob, convId);
 
         chunksRef.current = [];
       };
@@ -89,17 +105,42 @@ function App() {
     }
   };
 
+  const startNewConversation = () => {
+    setConversationId(null);
+    localStorage.removeItem("conversationId");
+    setMessages([]);
+    console.log("NEW CONVERSATION STARTED");
+  };
+
   return (
     <div className="w-screen h-screen relative bg-[#2d0930] inter">
+      <div className="fixed top-2 left-2 z-100 text-white flex gap-5 items-center">
+        <button onClick={startNewConversation}>Start new conversation</button>
+        <p>conv_id: {conversationId}</p>
+      </div>
       <div className="absolute h-full overflow-y-scroll z-60 w-full px-[10rem] p-5">
+        <div className="h-full fixed left-0 top-20 w-[20rem] flex flex-col gap-3 text-white">
+          {conversations &&
+            conversations.map((conv, idx) => (
+              <li
+                key={conv.id + idx}
+                className=" list-none bg-white/10 rounded-2xl px-3 p-2 w-fit"
+                onClick={() => {
+                  setConversationId(conv.id);
+                  localStorage.setItem("conversationId", conv.id);
+                }}
+              >
+                {conv.title}
+              </li>
+            ))}
+        </div>
         <div className=" flex flex-col gap-5">
-          {messages && (
-            <MessageBubble
-              messages={messages}
-              setMessageErrorCtx={setMessageErrorCtx}
-              setIsContextWindowOpen={setIsCtxWindowOpen}
-            />
-          )}
+          {messages &&
+            messages.map((msg, idx) => (
+              <div key={msg.messageId + idx}>
+                <CompChatBubble msg={msg} />
+              </div>
+            ))}
         </div>
       </div>
       {!stream && (

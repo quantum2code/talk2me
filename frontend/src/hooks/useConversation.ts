@@ -1,22 +1,20 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { startConversation } from "../utils/axios";
 
-export function useConversation() {
-  const [conversationID, setConversationID] = useState<string | null>(
-    () => localStorage.getItem("conversationID")
+export const useConversation = () => {
+  const [conversationId, setConversationId] = useState<string | null>(() =>
+    localStorage.getItem("conversationId")
   );
 
-  const startNewConversation = useCallback(async () => {
-    const conversationID = await startConversation();
-    setConversationID(conversationID);
-    localStorage.setItem("conversationID", conversationID);
-    return conversationID;
-  }, []);
-
-  const endConversation = useCallback(() => {
-    setConversationID(null);
-    localStorage.removeItem("conversationID");
-  }, []);
-
-  return { conversationID, startNewConversation, endConversation };
-}
+  const getConversationId = async () => {
+    let convId = conversationId || localStorage.getItem("conversationId");
+    if (!convId) {
+      convId = await startConversation();
+      setConversationId(convId);
+      localStorage.setItem("conversationId", convId);
+      return convId;
+    }
+    return convId;
+  };
+  return { conversationId, setConversationId, getConversationId };
+};

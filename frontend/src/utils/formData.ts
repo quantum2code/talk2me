@@ -1,7 +1,7 @@
-export const fromDataConstructor = (blob: Blob, convID: string): FormData => {
+export const fromDataConstructor = (blob: Blob, convId: string): FormData => {
   const fileName = `recording-${Date.now()}.webm`;
   const formData = new FormData();
-  formData.append("audioFile", blob, fileName);
-  formData.append("conversationID", convID);
+  formData.append("audio", blob, fileName);
+  formData.append("conversationId", convId);
   return formData;
 };

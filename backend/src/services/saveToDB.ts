@@ -1,43 +1,24 @@
-import { ConversationModel, MessageModel } from "../db/schema";
+import { AIAnalysis, Status } from "shared/src/types";
+import { MessageModel } from "../db/schema";
 
-export async function addUserMessage(
-  conversationID: string,
-  transcript: string,
-  spans?: []
-) {
+export async function addMessage(conversationId: string, transcript: string) {
   const message = await MessageModel.create({
-    conversationID,
-    role: "user",
+    conversationId,
     status: "pending",
     transcript,
-    spans: spans || [],
   });
-
-  await ConversationModel.findByIdAndUpdate(conversationID, {
-    $push: { messages: message._id },
-  });
-
   return message;
 }
 
-export async function addAIMessage(
-  conversationID: string,
-  critique: string,
-  suggestions: string[],
-  score: number = 0
+export async function updateMessage(
+  messageId: string,
+  status: Status,
+  aiAnalysis?: AIAnalysis
 ) {
-  const message = await MessageModel.create({
-    conversationID,
-    role: "ai",
-    status: "complete",
-    critique,
-    suggestions: suggestions || [],
-    score,
+  const updateData: any = { status };
+  if (aiAnalysis !== undefined) updateData.aiAnalysis = aiAnalysis;
+  const message = await MessageModel.findByIdAndUpdate(messageId, updateData, {
+    new: true,
   });
-
-  await ConversationModel.findByIdAndUpdate(conversationID, {
-    $push: { messages: message._id },
-  });
-
   return message;
 }

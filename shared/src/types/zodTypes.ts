@@ -1,15 +1,12 @@
-import { start } from "repl";
-import { TranscriptSpans } from "./index";
-import z, { success } from "zod";
-import { Status } from ".";
+import z from "zod";
+export const statusEnum = z.enum([
+  "pending",
+  "transcribed",
+  "analyzed",
+  "failed",
+]);
 
-export const transcriptionRequestSchema = z.object({
-  conversationID: z.uuid(),
-  messageID: z.uuid(),
-  audio: z.file(),
-});
-
-export const AIResponseSchema = z.object({
+export const aiResponseSchema = z.object({
   corrections: z
     .array(
       z.object({
@@ -61,43 +58,52 @@ export const AIResponseSchema = z.object({
     ),
 });
 
-export type AIResponse = z.infer<typeof AIResponseSchema>;
+export const errorDetailSchema = z.object({
+  original: z.string(),
+  corrected: z.string(),
+  error: z.string(),
+  type: z.enum(["grammar", "vocabulary"]),
+});
 
-const TranscriptSpanSchema = z.object({
+export const transcriptSpanSchema = z.object({
   text: z.string(),
   isError: z.boolean(),
-  error: z
+  error: errorDetailSchema.nullable(),
+});
+
+export const aiAnalysisSchema = z.object({
+  spans: z.array(transcriptSpanSchema),
+  critique: z.string(),
+  suggestions: z.array(z.string().min(1)),
+  score: z.number().int().min(0).max(100),
+});
+
+export const MessageResponseSchema = z.object({
+  conversationId: z.string(),
+  messageId: z.string(),
+  status: statusEnum,
+  transcript: z.string().optional(),
+  aiAnalysis: aiAnalysisSchema.optional(),
+});
+
+export const aiAnalysisResponseSchema = z.object({
+  conversationId: z.string(),
+  messageId: z.string(),
+  status: statusEnum,
+  transcript: z.string().optional(),
+  aiAnalysis: z
     .object({
-      original: z.string(),
-      corrected: z.string(),
-      error: z.string(),
-      type: z.enum(["grammar", "vocabulary"]),
+      spans: z.array(transcriptSpanSchema),
+      critique: z.string(),
+      suggestions: z.array(z.string().min(1)),
+      score: z.number().int().min(0).max(100),
     })
-    .nullable(),
+    .optional(),
 });
 
-export const startConversationSchema = z.object({
-  createdAt: z.date().default(new Date()),
-  conversationID: z.string(),
-});
-
-export const TranscriptResponseSchema = z.object({
-  messageID: z.string(),
-  conversationID: z.string(),
+export const transcriptResponseSchema = z.object({
+  conversationId: z.string(),
+  messageId: z.string(),
   transcript: z.string(),
-  status: z.enum(Status),
-});
-export const AnalysisResponseSchema = z.object({
-  conversationID: z.string(),
-  user: z.object({
-    id: z.string(),
-    spans: z.array(TranscriptSpanSchema).nullable(),
-  }),
-  ai: z.object({
-    id: z.string(),
-    critique: z.string(),
-    suggestions: z.array(z.string()),
-    score: z.number(),
-  }),
-  status: z.enum(Status),
+  status: statusEnum,
 });

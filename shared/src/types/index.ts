@@ -1,15 +1,4 @@
-import z from "zod";
-
-export enum Role {
-  User = "user",
-  AI = "ai",
-}
-
-export enum Status {
-  Pending = "pending",
-  Completed = "complete",
-  Error = "error",
-}
+export type Status = "pending" | "transcribed" | "analyzed" | "failed";
 
 export type ErrorDetail = {
   original: string;
@@ -18,37 +7,23 @@ export type ErrorDetail = {
   type: "grammar" | "vocabulary";
 };
 
-// Conversation
-export type Conversation = {
-  id: string;
-  messages: Message[];
-};
-
 export type TranscriptSpans = {
   text: string;
   isError: boolean;
-  error: ErrorDetail | null;
+  error?: ErrorDetail | null;
 };
 
-// Message
 export type Message = {
-  conversationID: string;
-  id: string;
-  role: Role;
+  messageId: string;
+  conversationId: string;
   status: Status;
-};
-
-export type AIMessage = Message & {
-  role: Role.AI;
-  critique?: string;
-  suggestions?: string[];
-  score?: number;
-};
-
-export type UserMessage = Message & {
-  role: Role.User;
   transcript?: string;
-  spans?: TranscriptSpans[];
+  aiAnalysis?: AIAnalysis;
 };
 
-export type ChatMessage = UserMessage | AIMessage;
+export type AIAnalysis = {
+  spans?: TranscriptSpans[];
+  critique?: string;
+  score?: number;
+  suggestions?: string[];
+};

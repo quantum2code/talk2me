@@ -1,34 +1,24 @@
 import { Router } from "express";
 import { transcriptionHandler } from "../controllers/transcriptionHandler";
 import multer from "multer";
-import path from "path";
 import { analysisHandler } from "../controllers/analysisHandler";
-import { start } from "repl";
 import { startConversationHandler } from "../controllers/startConversationHandler";
+import { getConversationsHandler } from "../controllers/getConversationsHandler";
+import { getConversationByIdHandler } from "../controllers/getConversationByIdHandler";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "../utils/auth";
 
-// let currFileName = "";
-// const upload = multer({
-//   storage: multer.diskStorage({
-//     destination: "./uploads/",
-
-//     filename: function (req, file, cb) {
-//       currFileName =
-//         file.fieldname + "-" + Date.now() + path.extname(file.originalname);
-//       cb(null, currFileName);
-//     },
-//   }),
-// });
 const upload = multer({ storage: multer.memoryStorage() });
 
 const apiRouter = Router();
 
-apiRouter.post(
-  "/transcription",
-  upload.single("audioFile"),
-  transcriptionHandler
-);
+apiRouter.post("/transcription", upload.single("audio"), transcriptionHandler);
 apiRouter.post("/analysis", analysisHandler);
 
-apiRouter.post("/start-conversation", startConversationHandler);
+apiRouter.post("/start", startConversationHandler);
+apiRouter.get("/conversations", getConversationsHandler);
+apiRouter.get("/conversations/:id", getConversationByIdHandler);
+
+apiRouter.all("/auth/{*any}", toNodeHandler(auth));
 
 export { apiRouter };

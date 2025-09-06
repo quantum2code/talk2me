@@ -1,55 +1,65 @@
 import mongoose, { Schema } from "mongoose";
 
-const ConversationSchema = new Schema(
+const ErrorDetailSchema = new Schema(
   {
-    // could add "userId" here if you want multi-user
-    messages: [{ type: Schema.Types.ObjectId, ref: "Message" }],
+    original: String,
+    corrected: String,
+    error: String,
+    type: { type: String, enum: ["grammar", "vocabulary"] },
   },
-  { timestamps: true }
+  { _id: false }
 );
 
-export const ConversationModel = mongoose.model(
-  "Conversation",
-  ConversationSchema
+const TranscriptSpanSchema = new Schema(
+  {
+    text: String,
+    isError: Boolean,
+    error: { type: ErrorDetailSchema, default: null },
+  },
+  { _id: false }
 );
-
-const ErrorDetailSchema = new Schema({
-  original: String,
-  corrected: String,
-  error: String,
-  type: { type: String, enum: ["grammar", "vocabulary"] },
-});
-
-const TranscriptSpanSchema = new Schema({
-  text: String,
-  isError: Boolean,
-  error: { type: ErrorDetailSchema, default: null },
-});
 
 const MessageSchema = new Schema(
   {
-    conversationID: {
+    conversationId: {
       type: Schema.Types.ObjectId,
       ref: "Conversation",
       required: true,
     },
-    role: { type: String, enum: ["user", "ai"], required: true },
     status: {
       type: String,
-      enum: ["pending", "complete", "error"],
+      enum: ["pending", "transcribed", "complete", "failed"],
       required: true,
     },
 
     // User fields
-    transcript: String,
-    spans: [TranscriptSpanSchema],
+    transcript: { type: String, default: "" },
+    aiAnalysis: {
+      type: new Schema(
+        {
+          spans: {
+            type: [TranscriptSpanSchema],
+          },
+          critique: { type: String },
+          suggestions: { type: [String], default: [] },
+          score: { type: Number, min: 0, max: 100 },
+        },
+        { _id: false }
+      ),
+    },
+  },
+  { timestamps: true }
+);
 
-    // AI fields
-    critique: String,
-    suggestions: [String],
-    score: { type: Number, min: 0, max: 100 },
+const ConversationSchema = new Schema(
+  {
+    title: { type: String, default: "New Conversation" },
   },
   { timestamps: true }
 );
 
 export const MessageModel = mongoose.model("Message", MessageSchema);
+export const ConversationModel = mongoose.model(
+  "Conversation",
+  ConversationSchema
+);
