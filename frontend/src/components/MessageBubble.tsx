@@ -30,14 +30,14 @@ const CompChatBubble = ({ msg }: { msg: Message }) => {
 };
 
 const ChatBubble = ({ children }: { children: ReactNode }) => (
-  <div className="leading-10 text-xl font-medium bg-linear-0 from-white/6 to-white/3 p-6 rounded-4xl max-w-[35rem] self-end backdrop-blur-2xl">
+  <div className=" text-white leading-10 text-xl font-medium bg-linear-0 from-white/6 to-white/3 p-6 rounded-4xl max-w-[35rem] self-end backdrop-blur-2xl border hover:scale-99 duration-100">
     {children}
   </div>
 );
 
 const AIChatBubble = ({ msg }: { msg: AIAnalysis }) => (
-  <div className="leading-9 text-lg bg-linear-0 from-black/20 to-black/8 p-3 px-6 rounded-4xl max-w-[35rem] self-start my-4 backdrop-blur-2xl">
-    <div className="flex items-center gap-2 bg-white/10 w-fit px-3 py-1 rounded-full mb-2">
+  <div className="text-white leading-9 text-lg bg-linear-0 from-black/20 to-black/8 p-3 px-6 rounded-4xl max-w-[35rem] self-start my-4 backdrop-blur-2xl border hover:scale-99 duration-100">
+    <div className="flex items-center gap-2 bg-white/10 w-fit px-3 py-1 rounded-full mb-2 cursor-pointer">
       <IoStar className="inline text-2xl" />
       <p>{msg.score}</p>
     </div>

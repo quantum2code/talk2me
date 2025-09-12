@@ -6,7 +6,7 @@ import { startConversationHandler } from "../controllers/startConversationHandle
 import { getConversationsHandler } from "../controllers/getConversationsHandler";
 import { getConversationByIdHandler } from "../controllers/getConversationByIdHandler";
 import { toNodeHandler } from "better-auth/node";
-import { auth } from "../utils/auth";
+// import { auth } from "../utils/auth";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -19,6 +19,6 @@ apiRouter.post("/start", startConversationHandler);
 apiRouter.get("/conversations", getConversationsHandler);
 apiRouter.get("/conversations/:id", getConversationByIdHandler);
 
-apiRouter.all("/auth/{*any}", toNodeHandler(auth));
+// apiRouter.all("/auth/{*any}", toNodeHandler(auth));
 
 export { apiRouter };

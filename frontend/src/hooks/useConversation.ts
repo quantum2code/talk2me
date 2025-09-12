@@ -1,18 +1,26 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { startConversation } from "../utils/axios";
+import { useParams } from "react-router";
 
 export const useConversation = () => {
-  const [conversationId, setConversationId] = useState<string | null>(() =>
-    localStorage.getItem("conversationId")
+  const { convId } = useParams();
+  const [conversationId, setConversationId] = useState<string | null>(
+    () => convId || localStorage.getItem("conversationId")
   );
 
-  const getConversationId = async () => {
-    let convId = conversationId || localStorage.getItem("conversationId");
-    if (!convId) {
-      convId = await startConversation();
+  useEffect(() => {
+    if (convId) {
       setConversationId(convId);
       localStorage.setItem("conversationId", convId);
-      return convId;
+    }
+  }, [convId]);
+  const getConversationId = async () => {
+    let tempId = conversationId || localStorage.getItem("conversationId");
+    if (!tempId) {
+      tempId = await startConversation();
+      setConversationId(tempId);
+      localStorage.setItem("conversationId", tempId);
+      return tempId;
     }
     return convId;
   };

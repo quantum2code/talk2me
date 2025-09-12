@@ -3,7 +3,7 @@ import { getConversationById, getConversations } from "../utils/axios";
 export const useFetchMessages = ({
   currentConversationId,
 }: {
-  currentConversationId: string;
+  currentConversationId: string | null;
 }) => {
   // all conversations
   const conversationsQuery = useQuery({
