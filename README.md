@@ -19,3 +19,9 @@
 
 - 📚 **User History**  
   All transcripts and feedback are saved per user for continuous learning and improvement.
+
+## How to run
+- ***Frontend***
+  - ```npm run dev -w frontend```
+- ***Backend***
+  - ```npm run dev -w backend```
