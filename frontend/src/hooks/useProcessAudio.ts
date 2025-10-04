@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { type Message } from "shared/src/types";
+import { type Message } from "../../../shared/src/types";
 import { postAnalysis, postTranscription } from "../utils/axios";
 import { fromDataConstructor } from "../utils/formData";
 
