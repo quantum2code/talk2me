@@ -22,7 +22,7 @@ function Signup() {
   const signIn = async () => {
     const { data, error } = await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/c/",
+      callbackURL: "http://localhost:5173/",
     });
   };
 
