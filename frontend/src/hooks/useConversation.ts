@@ -12,17 +12,19 @@ export const useConversation = () => {
     if (convId) {
       setConversationId(convId);
       localStorage.setItem("conversationId", convId);
+    } else {
+      setConversationId(null);
+      localStorage.removeItem("conversationId");
     }
   }, [convId]);
   const getConversationId = async () => {
-    let tempId = conversationId || localStorage.getItem("conversationId");
-    if (!tempId) {
-      tempId = await startConversation();
+    if (!conversationId) {
+      const tempId = await startConversation();
       setConversationId(tempId);
       localStorage.setItem("conversationId", tempId);
       return tempId;
     }
-    return convId;
+    return conversationId;
   };
   return { conversationId, setConversationId, getConversationId };
 };

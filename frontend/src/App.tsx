@@ -23,7 +23,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/c/:convId" element={<Recording />} />
+        <Route path="/c/:convId?" element={<Recording />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/aistats" element={<AIStats />} />
 

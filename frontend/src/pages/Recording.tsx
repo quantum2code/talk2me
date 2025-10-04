@@ -45,6 +45,10 @@ function App() {
   };
 
   useEffect(() => {
+    console.log("conv id: " + conversationId);
+  }, [conversationId]);
+
+  useEffect(() => {
     if (messagesQuery.data) {
       setMessages(messagesQuery.data);
     }
@@ -83,9 +87,9 @@ function App() {
         const audioBlob = new Blob(chunksRef.current, {
           type: AUDIO_FILE_TYPE,
         });
+        console.log(conversationId);
 
-        // const convId = await getConversationId();
-        // await processAudio(audioBlob, convId);
+        await processAudio(audioBlob, conversationId);
 
         chunksRef.current = [];
       };

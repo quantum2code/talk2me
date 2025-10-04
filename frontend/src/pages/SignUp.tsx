@@ -5,10 +5,10 @@ import LogoSVG from "@/components/LogoSVG";
 import { FaGoogle } from "react-icons/fa";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
 
 function Signup() {
   const navigate = useNavigate();
-  // For GOOGLE Login Handeling But using Firebase don't change the code without discussing - Saikat...
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -17,6 +17,13 @@ function Signup() {
     // VALIDATE USER
     navigate("/main");
     return e;
+  };
+
+  const signIn = async () => {
+    const { data, error } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/c/",
+    });
   };
 
   return (
@@ -112,6 +119,7 @@ function Signup() {
           type="button"
           //yet to implement
           className="w-full border border-white/10 hover:border-white/20 bg-black text-white py-2 rounded-lg flex items-center justify-center gap-3"
+          onClick={signIn}
         >
           <FaGoogle />
           Continue with Google

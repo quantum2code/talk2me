@@ -10,51 +10,34 @@ import {
   Settings,
   Zap,
 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
 
 export default function ProfileSettings() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const data = {
+    user: {
+      name: "John Doe",
+      email: "john@doe.org",
+      avatar: "",
+    },
+    navMain: [
+      {
+        title: "Conversations",
+        // items: conversations,
+      },
+    ],
+  };
 
   return (
-    <div className="relative min-h-screen bg-[#0D0D0D] text-white flex">
+    <div className="relative w-screen min-h-screen bg-[#0D0D0D] text-white flex">
       {/* Blurred blobs */}
       <div className="absolute w-[500px] h-[500px] bg-purple-600 opacity-20 rounded-full blur-[250px] top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-0" />
       <div className="absolute w-[400px] h-[400px] bg-blue-500 opacity-20 rounded-full blur-[200px] top-10 left-10 z-0" />
 
       {/* Sidebar */}
-      <aside className="relative z-10 w-64 min-h-screen bg-gradient-to-b from-[#1E1E1E] to-[#121212] p-6 flex flex-col justify-between shadow-lg">
-        <div>
-          <div className="flex items-center gap-2 mb-8">
-            <Zap className="text-purple-500" />
-            <h1 className="text-lg font-semibold">Talk2Me</h1>
-          </div>
-
-          <nav className="flex flex-col gap-4">
-            <button className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-xl font-semibold">
-              <MessageSquare size={18} /> Chat
-            </button>
-            <button className="flex items-center gap-2 text-gray-400 hover:text-white">
-              <MessageSquare size={18} /> Chat History
-            </button>
-            <button className="flex items-center gap-2 text-gray-400 hover:text-white">
-              <User size={18} /> AI Personalities
-            </button>
-            <button className="flex items-center gap-2 text-gray-400 hover:text-white">
-              <Settings size={18} /> Settings
-            </button>
-          </nav>
-        </div>
-
-        <div className="bg-purple-700 rounded-2xl p-4 text-center">
-          <p className="text-sm mb-2 font-medium">Upgrade to Pro</p>
-          <p className="text-xs mb-4 opacity-80">
-            Unlock powerful features with pro upgrade today!
-          </p>
-          <button className="bg-white text-purple-700 px-4 py-2 rounded-xl text-sm font-semibold flex items-center justify-center gap-1 mx-auto">
-            Upgrade now <ArrowRight size={16} />
-          </button>
-        </div>
-      </aside>
 
       {/* Main content */}
       <main className="relative z-10 flex-1 flex flex-col px-12 py-10">
@@ -83,6 +66,16 @@ export default function ProfileSettings() {
         </div>
 
         {/* Card */}
+        <Tabs defaultValue="account" className="w-[400px]">
+          <TabsList>
+            <TabsTrigger value="account">Account</TabsTrigger>
+            <TabsTrigger value="password">Password</TabsTrigger>
+          </TabsList>
+          <TabsContent value="account">
+            Make changes to your account here.
+          </TabsContent>
+          <TabsContent value="password">Change your password here.</TabsContent>
+        </Tabs>
         <div className="bg-gradient-to-br from-[#181818] to-[#101010] p-8 rounded-2xl shadow-2xl border border-white/10 max-w-4xl mx-auto">
           {/* Profile pic */}
           <div className="flex items-center mb-8">
