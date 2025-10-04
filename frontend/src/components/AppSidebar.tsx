@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Minus, Plus } from "lucide-react";
+import { ChevronDown, ChevronUp, Minus, Plus } from "lucide-react";
 
 import {
   Collapsible,
@@ -24,6 +24,7 @@ import { NavUser } from "./NavUser";
 import LogoSVG from "./LogoSVG";
 import { Button } from "./ui/button";
 import { Link } from "react-router";
+import { BsSoundwave } from "react-icons/bs";
 
 // This is sample data.
 // const data = {
@@ -42,6 +43,7 @@ import { Link } from "react-router";
 
 export function AppSidebar({
   data,
+  startNewConv,
   ...props
 }: {
   data: {
@@ -60,6 +62,7 @@ export function AppSidebar({
       }>;
     }>;
   };
+  startNewConv: () => void;
 } & React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
@@ -68,7 +71,7 @@ export function AppSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                <div className="bg-sidebar-accent text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   {/* <GalleryVerticalEnd className="size-4" /> */}
                   <LogoSVG classname="w-4 h-4" />
                 </div>
@@ -83,7 +86,12 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <Button variant={"cta"} className="border-2 border-white/20">
+          <Button
+            variant={"cta"}
+            className="border-2 border-white/20"
+            onClick={startNewConv}
+          >
+            <BsSoundwave />
             Start new Chat
           </Button>
         </SidebarGroup>
@@ -99,8 +107,8 @@ export function AppSidebar({
                   <CollapsibleTrigger asChild>
                     <SidebarMenuButton className="font-medium text-muted-foreground">
                       {item.title}
-                      <Plus className="ml-auto group-data-[state=open]/collapsible:hidden" />
-                      <Minus className="ml-auto group-data-[state=closed]/collapsible:hidden" />
+                      <ChevronUp className="ml-auto group-data-[state=open]/collapsible:hidden" />
+                      <ChevronDown className="ml-auto group-data-[state=closed]/collapsible:hidden" />
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
                   {item.items?.length ? (

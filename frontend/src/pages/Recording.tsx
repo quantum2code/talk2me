@@ -15,7 +15,7 @@ import PracticePage from "../components/recordingPage";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
 import ChatWindow from "@/components/ChatWindow";
-import { useParams } from "react-router";
+import { authClient } from "@/lib/auth-client";
 
 function App() {
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -28,12 +28,14 @@ function App() {
   const [messageErrorCtx, setMessageErrorCtx] = useState<ErrorDetail | null>(
     null
   );
-  const { conversationId, setConversationId } = useConversation();
+  const { conversationId, setConversationId, getConversationId } =
+    useConversation();
   const { conversationsQuery, messagesQuery } = useFetchMessages({
     currentConversationId: conversationId,
   });
   const [isCtxWindowOpen, setIsCtxWindowOpen] = useState(true);
   const chunksRef = useRef<Blob[]>([]);
+  const { data: session, isPending } = authClient.useSession();
 
   const getStream = async () => {
     try {
@@ -91,7 +93,12 @@ function App() {
         });
         console.log(conversationId);
 
-        await processAudio(audioBlob, conversationId);
+        if (!conversationId) {
+          const tempId = await getConversationId();
+          await processAudio(audioBlob, tempId);
+        } else {
+          await processAudio(audioBlob, conversationId);
+        }
 
         chunksRef.current = [];
       };
@@ -129,9 +136,9 @@ function App() {
 
   const data = {
     user: {
-      name: "John Doe",
-      email: "john@doe.org",
-      avatar: "",
+      name: session?.user?.name || "John Doe",
+      email: session?.user?.email || "john@doe.org",
+      avatar: session?.user?.image || "",
     },
     navMain: [
       {
@@ -144,16 +151,16 @@ function App() {
   return (
     <div className="flex h-screen w-screen bg-background pt-[0px]">
       <SidebarProvider>
-        <AppSidebar data={data} />
+        <AppSidebar startNewConv={startNewConversation} data={data} />
         <SidebarInset className="bg-accent-2/50">
-          <PracticePage
+          {/* <PracticePage
             onMicClick={() => {
               if (!isRecording) startRecording();
               else stopRecording();
             }}
             isRecording={isRecording}
             stream={stream}
-          />
+          /> */}
           <ChatWindow messages={messages} />
           {!stream && (
             <Button className="fixed right-2 top-2 z-100" onClick={getStream}>

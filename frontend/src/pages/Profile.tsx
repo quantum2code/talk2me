@@ -31,20 +31,16 @@ export default function ProfileSettings() {
   const user = session?.user;
 
   return (
-    <div className="min-h-screen bg-[#0D0D0D] text-white flex flex-col items-center py-12 px-4 relative overflow-hidden">
-      {/* Background effects */}
-      <div className="absolute w-[600px] h-[600px] bg-purple-700/30 rounded-full blur-[200px] top-1/3 left-1/3 -z-10" />
-      <div className="absolute w-[400px] h-[400px] bg-blue-600/30 rounded-full blur-[180px] top-0 left-0 -z-10" />
-
+    <div className="min-h-screen w-screen bg-[#0D0D0D] text-white flex flex-col items-center py-12 px-4 relative overflow-hidden">
       <div className="w-full max-w-5xl">
         {/* Tabs */}
         <Tabs defaultValue="account" className="w-full mb-10">
-          <TabsList className="bg-transparent border-b border-white/10 flex justify-start space-x-8 rounded-none">
+          <TabsList className="bg-neutral-900">
             {["Account", "Password"].map((tab) => (
               <TabsTrigger
                 key={tab}
                 value={tab.toLowerCase()}
-                className="data-[state=active]:border-b-2 data-[state=active]:border-white data-[state=active]:text-white text-gray-400 rounded-none pb-3 text-sm"
+                className="data-[state=active]:bg-accent data-[state=active]:text-white text-gray-400 text-sm"
               >
                 {tab}
               </TabsTrigger>
@@ -76,10 +72,10 @@ export default function ProfileSettings() {
                     />
                     <Button
                       size="icon"
-                      variant="secondary"
-                      className="absolute bottom-0 right-0 rounded-full bg-purple-600 hover:bg-purple-700 text-white p-2"
+                      variant={"default"}
+                      className="absolute bottom-0 right-0 rounded-full p-2"
                     >
-                      <Upload size={16} />
+                      <Upload size={10} />
                     </Button>
                   </div>
                   <div>
@@ -95,11 +91,11 @@ export default function ProfileSettings() {
                 {/* Form Fields */}
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <Label>Your Full Name*</Label>
+                    <Label>Your Name*</Label>
                     <Input
                       type="text"
                       defaultValue={user?.name || ""}
-                      className="bg-[#1c1c1c] border-white/10"
+                      className="bg-[#1c1c1c] border-white/10 mt-4"
                     />
                   </div>
                   <div>
@@ -107,7 +103,7 @@ export default function ProfileSettings() {
                     <Input
                       type="email"
                       defaultValue={user?.email || ""}
-                      className="bg-[#1c1c1c] border-white/10"
+                      className="bg-[#1c1c1c] border-white/10 mt-4"
                       disabled
                     />
                   </div>
@@ -115,7 +111,7 @@ export default function ProfileSettings() {
               </CardContent>
 
               <CardFooter className="pt-6 flex justify-end">
-                <Button className="flex items-center gap-2">
+                <Button variant={"cta"} className="flex items-center gap-2">
                   Save Changes <ArrowRight size={16} />
                 </Button>
               </CardFooter>
