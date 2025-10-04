@@ -5,7 +5,7 @@ import {
   type AIAnalysis,
   type ErrorDetail,
   type Message,
-} from "shared/src/types";
+} from "../../../shared/src/types";
 
 const CompChatBubble = ({ msg }: { msg: Message }) => {
   switch (msg.status) {

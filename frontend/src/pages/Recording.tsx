@@ -2,13 +2,15 @@ import { useState, useEffect, useRef } from "react";
 import { BsRecordCircle } from "react-icons/bs";
 import { BsPauseCircle } from "react-icons/bs";
 import AudioVisualizer from "../components/AudioVisualizer";
-import { AUDIO_FILE_TYPE, MAX_FILE_SIZE } from "shared/src/constants";
+import { AUDIO_FILE_TYPE, MAX_FILE_SIZE } from "../../../shared/src/constants";
 import { useProcessAudio } from "../hooks/useProcessAudio";
-import { type ErrorDetail } from "shared/src/types";
+import { type ErrorDetail } from "../../../shared/src/types";
 import MessageContextWindow from "../components/MessageContextWindow";
 import { useConversation } from "../hooks/useConversation";
 import { useFetchMessages } from "../hooks/useFetchMessages";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+
+import PracticePage from "../components/recordingPage";
 
 import { AppSidebar } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
@@ -140,10 +142,18 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen w-screen bg-background">
+    <div className="flex h-screen w-screen bg-background pt-[0px]">
       <SidebarProvider>
         <AppSidebar data={data} />
         <SidebarInset className="bg-accent-2/50">
+          <PracticePage
+            onMicClick={() => {
+              if (!isRecording) startRecording();
+              else stopRecording();
+            }}
+            isRecording={isRecording}
+            stream={stream}
+          />
           <ChatWindow messages={messages} />
           {!stream && (
             <Button className="fixed right-2 top-2 z-100" onClick={getStream}>
@@ -153,6 +163,7 @@ function App() {
           <div className="fixed bottom-0 w-full h-[20rem] pointer-events-none">
             {isRecording && <AudioVisualizer stream={stream} />}
           </div>
+
           <div className="fixed right-2 z-60 bottom-2 flex gap-2">
             <Button
               onClick={startRecording}

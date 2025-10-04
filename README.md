@@ -20,8 +20,27 @@
 - 📚 **User History**  
   All transcripts and feedback are saved per user for continuous learning and improvement.
 
-## How to run
-- ***Frontend***
-  - ```npm run dev -w frontend```
-- ***Backend***
-  - ```npm run dev -w backend```
+# steps to run in dev
+
+- Add your ` .env ` file inside ` backend/express/ ` folder
+- add 2 Env variables `PORT` & ` GROQ_API_KEY ` 
+- get your groq api key from [here](https://console.groq.com/keys)
+- `PORT=3000` as a standard value
+
+``` bash
+cd frontend/react-fe
+npm install
+npm run dev 
+```
+``` bash
+cd backend/express
+npm run dev
+```
+- now goto the frontend url to test it
+
+## 👥 Contributors
+
+Thanks to all the amazing people who contribute to this project!
+
+[![Contributors](https://contrib.rocks/image?repo=quantum2code/talk2me)](https://github.com/quantum2code/talk2me/graphs/contributors)
+
