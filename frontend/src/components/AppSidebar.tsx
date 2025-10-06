@@ -42,6 +42,7 @@ import { Link } from "react-router";
 
 export function AppSidebar({
   data,
+  startConversation,
   ...props
 }: {
   data: {
@@ -60,6 +61,7 @@ export function AppSidebar({
       }>;
     }>;
   };
+  startConversation: () => void;
 } & React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
@@ -83,7 +85,11 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <Button variant={"cta"} className="border-2 border-white/20">
+          <Button
+            variant={"cta"}
+            className="border-2 border-white/20"
+            onClick={startConversation}
+          >
             Start new Chat
           </Button>
         </SidebarGroup>

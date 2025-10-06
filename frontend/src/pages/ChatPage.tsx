@@ -6,14 +6,14 @@ import { AUDIO_FILE_TYPE, MAX_FILE_SIZE } from "shared/src/constants";
 import { useProcessAudio } from "../hooks/useProcessAudio";
 import { type ErrorDetail } from "shared/src/types";
 import MessageContextWindow from "../components/MessageContextWindow";
+import { useConversation } from "../hooks/useConversation";
 import { useFetchMessages } from "../hooks/useFetchMessages";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 import { AppSidebar } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
 import ChatWindow from "@/components/ChatWindow";
-import { startConversation } from "@/utils/axios";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 function App() {
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -26,25 +26,14 @@ function App() {
   const [messageErrorCtx, setMessageErrorCtx] = useState<ErrorDetail | null>(
     null
   );
-  const [conversationId, setConversationId] = useState<string | null>(
-    localStorage.getItem("conversationId")
-  );
+  const { conversationId, setConversationId, getConversationId } =
+    useConversation();
   const { conversationsQuery, messagesQuery } = useFetchMessages({
-    currentConversationId: conversationId!,
+    currentConversationId: conversationId,
   });
   const [isCtxWindowOpen, setIsCtxWindowOpen] = useState(true);
   const chunksRef = useRef<Blob[]>([]);
   const navigate = useNavigate();
-  const getConversationId = async () => {
-    let tempId = conversationId || localStorage.getItem("conversationId");
-    if (!tempId) {
-      tempId = await startConversation();
-      setConversationId(tempId);
-      localStorage.setItem("conversationId", tempId);
-      return tempId;
-    }
-    return tempId;
-  };
 
   const getStream = async () => {
     try {
@@ -56,11 +45,6 @@ function App() {
       console.error("ERROR getting stream: ", e);
     }
   };
-
-  useEffect(() => {
-    if (conversationId) localStorage.setItem("conversationId", conversationId);
-    else localStorage.removeItem("conversationId");
-  }, [conversationId]);
 
   useEffect(() => {
     if (messagesQuery.data) {
@@ -102,10 +86,7 @@ function App() {
           type: AUDIO_FILE_TYPE,
         });
 
-        if (!conversationId) {
-          const tempId = await getConversationId();
-          await processAudio(audioBlob, tempId!);
-        } else {
+        if (conversationId) {
           await processAudio(audioBlob, conversationId!);
         }
 
@@ -140,6 +121,7 @@ function App() {
     setConversationId(null);
     localStorage.removeItem("conversationId");
     setMessages([]);
+    navigate("/chat/");
     console.log("NEW CONVERSATION STARTED");
   };
 
