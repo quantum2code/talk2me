@@ -4,8 +4,6 @@ import { BsPauseCircle } from "react-icons/bs";
 import AudioVisualizer from "../components/AudioVisualizer";
 import { AUDIO_FILE_TYPE, MAX_FILE_SIZE } from "shared/src/constants";
 import { useProcessAudio } from "../hooks/useProcessAudio";
-import { type ErrorDetail } from "shared/src/types";
-import MessageContextWindow from "../components/MessageContextWindow";
 import { useFetchMessages } from "../hooks/useFetchMessages";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
@@ -19,22 +17,19 @@ function App() {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
   const [isRecording, setIsRecording] = useState(false);
-  const { messages, processAudio, setMessages } = useProcessAudio();
+  const { processAudio } = useProcessAudio();
   const [conversations, setConversations] = useState<
     { title: string; id: string; url: string }[]
   >([]);
-  const [messageErrorCtx, setMessageErrorCtx] = useState<ErrorDetail | null>(
-    null
-  );
   const [conversationId, setConversationId] = useState<string | null>(
     localStorage.getItem("conversationId")
   );
-  const { conversationsQuery, messagesQuery } = useFetchMessages({
+  const { conversationsQuery } = useFetchMessages({
     currentConversationId: conversationId!,
   });
-  const [isCtxWindowOpen, setIsCtxWindowOpen] = useState(true);
   const chunksRef = useRef<Blob[]>([]);
   const navigate = useNavigate();
+
   const getConversationId = async () => {
     let tempId = conversationId || localStorage.getItem("conversationId");
     if (!tempId) {
@@ -56,17 +51,6 @@ function App() {
       console.error("ERROR getting stream: ", e);
     }
   };
-
-  useEffect(() => {
-    if (conversationId) localStorage.setItem("conversationId", conversationId);
-    else localStorage.removeItem("conversationId");
-  }, [conversationId]);
-
-  useEffect(() => {
-    if (messagesQuery.data) {
-      setMessages(messagesQuery.data);
-    }
-  }, [messagesQuery.data]);
 
   useEffect(() => {
     if (conversationsQuery.data) {
@@ -105,8 +89,10 @@ function App() {
         if (!conversationId) {
           const tempId = await getConversationId();
           await processAudio(audioBlob, tempId!);
+          navigate(`/c/${tempId}`);
         } else {
           await processAudio(audioBlob, conversationId!);
+          navigate(`/c/${conversationId}`);
         }
 
         chunksRef.current = [];
@@ -118,6 +104,7 @@ function App() {
       }
     };
   }, [stream]);
+
   const startRecording = () => {
     if (recorder && recorder.state === "inactive") {
       recorder.start();
@@ -139,7 +126,6 @@ function App() {
   const startNewConversation = () => {
     setConversationId(null);
     localStorage.removeItem("conversationId");
-    setMessages([]);
     console.log("NEW CONVERSATION STARTED");
   };
 
@@ -162,7 +148,7 @@ function App() {
       <SidebarProvider>
         <AppSidebar startConversation={startNewConversation} data={data} />
         <SidebarInset className="bg-accent-2/50">
-          <ChatWindow messages={messages} />
+          <ChatWindow messages={[]} />
           {!stream && (
             <Button className="fixed right-2 top-2 z-100" onClick={getStream}>
               Request Mic Permission
@@ -184,11 +170,6 @@ function App() {
               Stop
             </Button>
           </div>
-          <MessageContextWindow
-            messageErrorCtx={messageErrorCtx}
-            isCtxWindowOpen={isCtxWindowOpen}
-            setIsCtxWindowOpen={setIsCtxWindowOpen}
-          />
         </SidebarInset>
       </SidebarProvider>
     </div>

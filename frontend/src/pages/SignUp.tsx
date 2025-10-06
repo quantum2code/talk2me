@@ -5,6 +5,7 @@ import LogoSVG from "@/components/LogoSVG";
 import { FaGoogle } from "react-icons/fa";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/hooks/useAuth";
 
 function Signup() {
   const navigate = useNavigate();
@@ -12,11 +13,11 @@ function Signup() {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSignup = (e: FormEvent) => {
-    e.preventDefault();
-    // VALIDATE USER
-    navigate("/main");
-    return e;
+  const signIn = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "http://localhost:5173/chat/",
+    });
   };
 
   return (
@@ -51,7 +52,7 @@ function Signup() {
           Join Talk2Me and improve your speech
         </p>
 
-        <form onSubmit={handleSignup} className="space-y-4">
+        <form className="space-y-4">
           {/* Full Name */}
           <input
             type="text"
@@ -112,6 +113,7 @@ function Signup() {
           type="button"
           //yet to implement
           className="w-full border border-white/10 hover:border-white/20 bg-black text-white py-2 rounded-lg flex items-center justify-center gap-3"
+          onClick={signIn}
         >
           <FaGoogle />
           Continue with Google

@@ -23,7 +23,7 @@ import {
 import { NavUser } from "./NavUser";
 import LogoSVG from "./LogoSVG";
 import { Button } from "./ui/button";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 // This is sample data.
 // const data = {
@@ -53,30 +53,31 @@ export function AppSidebar({
     };
     navMain: Array<{
       title: string;
-      items: Array<{
-        title: string;
-        url: string;
-        isActive?: boolean;
-        id: string;
-      }>;
+      items:
+        | Array<{
+            title: string;
+            url: string;
+            isActive?: boolean;
+            id: string;
+          }>
+        | undefined;
     }>;
   };
   startConversation: () => void;
 } & React.ComponentProps<typeof Sidebar>) {
+  const location = useLocation();
   return (
     <Sidebar {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <a href="/">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  {/* <GalleryVerticalEnd className="size-4" /> */}
                   <LogoSVG classname="w-4 h-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-semibold">Talk2Me</span>
-                  {/* <span className="">v1.0.0</span> */}
                 </div>
               </a>
             </SidebarMenuButton>
@@ -112,18 +113,28 @@ export function AppSidebar({
                   {item.items?.length ? (
                     <CollapsibleContent>
                       <SidebarMenuSub>
-                        {item.items.map((item) => (
-                          <SidebarMenuSubItem key={item.title + item.id}>
-                            <SidebarMenuSubButton
-                              asChild
-                              isActive={item.isActive}
-                            >
-                              <Link key={item.id} to={`/c/${item.id}`}>
-                                {item.title}
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
+                        {item.items.map((item, idx) => {
+                          const isActive =
+                            location.pathname === `/c/${item.id}`;
+
+                          return (
+                            <SidebarMenuSubItem key={item.title + item.id}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={isActive}
+                                className={`${
+                                  isActive
+                                    ? "bg-gradient-to-r from-accent/60 to-accent/10 py-4 border border-accent"
+                                    : ""
+                                }`}
+                              >
+                                <Link key={item.id} to={`/c/${item.id}`}>
+                                  {idx + 1 + ". " + item.title}
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          );
+                        })}
                       </SidebarMenuSub>
                     </CollapsibleContent>
                   ) : null}

@@ -3,29 +3,22 @@ import express from "express";
 import cors from "cors";
 import { apiRouter } from "./routes/route";
 import { errorHandler } from "./middleware/errorHandler";
-import { initializeMongoDB } from "./db/db";
-import mongoose from "mongoose";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./lib/auth";
 config({ path: "./.env" });
 
-let client: mongoose.mongo.MongoClient;
 const app = express();
 const PORT = process.env.PORT;
-const MONGODB_URI = process.env.MONGODB_URI;
 
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
-app.use(cors());
 
+app.all("/api/auth/{*any}", toNodeHandler(auth));
 app.get("/", (req, res) => res.json({ message: "hello from /" }));
 app.use("/api/", apiRouter);
 app.use(errorHandler);
 
 app.listen(PORT, async () => {
-  try {
-    client = await initializeMongoDB(MONGODB_URI || "");
-    console.log(`server running on http://localhost:${PORT}`);
-  } catch (error) {
-    console.error("FAILED TO START THE SERVER", error);
-  }
+  console.log(`server running on http://localhost:${PORT}`);
 });
-
 // export { client };

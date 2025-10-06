@@ -1,11 +1,11 @@
-import mongoose, { Connection } from "mongoose";
+import mongoose from "mongoose";
 
-export async function initializeMongoDB(
-  uri: string
-): Promise<mongoose.mongo.MongoClient> {
+let client: mongoose.mongo.MongoClient;
+export async function initializeMongoDB(): Promise<mongoose.mongo.MongoClient> {
   try {
-    await mongoose.connect(uri);
-    const client = mongoose.connection.getClient();
+    if (client) return client;
+    await mongoose.connect(process.env.MONGODB_URI!);
+    client = mongoose.connection.getClient();
     return client;
   } catch (error) {
     console.error("MONGODB CONNECTION:", error);
