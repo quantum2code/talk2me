@@ -14,6 +14,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
 import ChatWindow from "@/components/ChatWindow";
 import { useNavigate } from "react-router";
+import RecordingBtn from "@/components/RecordingBtn";
 
 function App() {
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -129,7 +130,12 @@ function App() {
       <SidebarProvider>
         <AppSidebar startConversation={startNewConversation} data={data} />
         <SidebarInset className="bg-gradient-to-b from-accent/60 to-accent/10 relative">
-          <ChatWindow messages={messages} />
+          <ChatWindow
+            messages={messages}
+            setIsCtxWindowOpen={setIsCtxWindowOpen}
+            setMessageErrorCtx={setMessageErrorCtx}
+            isCtxWindowOpen={isCtxWindowOpen}
+          />
           {!stream && (
             <Button className="fixed right-2 top-2 z-100" onClick={getStream}>
               Request Mic Permission
@@ -138,7 +144,13 @@ function App() {
           <div className="absolute inset-x-0 w-full z-10 bottom-0 h-[20rem] pointer-events-none">
             {isRecording && <AudioVisualizer stream={stream} />}
           </div>
-          <div className="fixed right-2 z-60 bottom-2 flex gap-2">
+          <RecordingBtn
+            isRecording={isRecording}
+            stopRecording={stopRecording}
+            startRecording={startRecording}
+            recorder={recorder}
+          />
+          {/* <div className="fixed right-2 z-60 bottom-2 flex gap-2">
             <Button
               onClick={startRecording}
               disabled={!recorder}
@@ -150,7 +162,7 @@ function App() {
             <Button onClick={stopRecording} disabled={!recorder}>
               Stop
             </Button>
-          </div>
+          </div> */}
           <MessageContextWindow
             messageErrorCtx={messageErrorCtx}
             isCtxWindowOpen={isCtxWindowOpen}

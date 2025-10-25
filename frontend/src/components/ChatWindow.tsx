@@ -1,12 +1,25 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SidebarTrigger } from "./ui/sidebar";
 import { Separator } from "@radix-ui/react-separator";
 import CompChatBubble from "./MessageBubble";
-import type { Message } from "shared/src/types";
+import { IoStar } from "react-icons/io5";
+import { SlidingNumber } from "./ui/sliding-number";
 
-const ChatWindow = ({ messages }: { messages: Message[] }) => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+const ChatWindow = ({
+  messages,
+  setIsCtxWindowOpen,
+  setMessageErrorCtx,
+  isCtxWindowOpen,
+}) => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const [score, setScore] = useState(
+    messages.reduce((sum, m) => sum + (m.aiAnalysis?.score || 0), 0)
+  );
+
+  useEffect(() => {
+    setScore(messages.reduce((sum, m) => sum + (m.aiAnalysis?.score || 0), 0));
+  }, [messages]);
+
   useEffect(() => {
     if (!bottomRef.current) return;
     bottomRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -16,6 +29,10 @@ const ChatWindow = ({ messages }: { messages: Message[] }) => {
     <>
       <header className="flex h-16 shrink-0 items-center gap-2 px-4 bg-background/20 backdrop-blur-2xl fixed w-full z-90 border-b">
         <SidebarTrigger className="-ml-1" />
+        <div className=" text-lg font-medium font-mono flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 cursor-pointer active:scale-98 select-none active:shadow-[0_0px_50px_rgba(247,_199,_67,_0.2)] duration-150 will-change-[scale] border-2 border-[#f7c743]">
+          <IoStar color="#f7c743" />
+          <SlidingNumber value={score} />
+        </div>
         <Separator
           orientation="vertical"
           className="mr-2 data-[orientation=vertical]:h-4"
@@ -26,7 +43,12 @@ const ChatWindow = ({ messages }: { messages: Message[] }) => {
           {messages &&
             messages.map((msg, idx) => (
               <div key={msg.messageId + idx}>
-                <CompChatBubble msg={msg} />
+                <CompChatBubble
+                  isCtxWindowOpen={isCtxWindowOpen}
+                  setIsCtxWindowOpen={setIsCtxWindowOpen}
+                  setMessageErrorCtx={setMessageErrorCtx}
+                  msg={msg}
+                />
               </div>
             ))}
           <div ref={bottomRef} className="h-[8rem]" />

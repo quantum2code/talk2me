@@ -1,166 +1,148 @@
 import React, { useState } from "react";
-// import { Input } from "@/components/ui/input";
-// import { Button } from "@/components/ui/button";
+import { Eye, EyeOff, ArrowRight, Upload } from "lucide-react";
 import {
-  Eye,
-  EyeOff,
-  ArrowRight,
-  User,
-  MessageSquare,
-  Settings,
-  Zap,
-} from "lucide-react";
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
+import { ChartBarMultiple } from "@/components/BarChart";
+import { authClient } from "@/hooks/useAuth";
+import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar } from "@/components/ui/avatar";
 
 export default function ProfileSettings() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { data: session, isPending } = authClient.useSession(); // ✅ fetch session data
+
+  if (isPending) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-[#0D0D0D] text-white">
+        <p>Loading profile...</p>
+      </div>
+    );
+  }
+
+  const user = session?.user;
 
   return (
-    <div className="relative min-h-screen bg-[#0D0D0D] text-white flex">
-      {/* Blurred blobs */}
-      <div className="absolute w-[500px] h-[500px] bg-purple-600 opacity-20 rounded-full blur-[250px] top-[40%] left-[50%] -translate-x-1/2 -translate-y-1/2 z-0" />
-      <div className="absolute w-[400px] h-[400px] bg-blue-500 opacity-20 rounded-full blur-[200px] top-10 left-10 z-0" />
+    <div className="min-h-screen w-screen bg-[#0D0D0D] text-white flex flex-col items-center py-12 px-4 relative overflow-hidden">
+      <div className="w-full max-w-5xl">
+        {/* Tabs */}
+        <Tabs defaultValue="profile" className="w-full mb-10">
+          <TabsList className="bg-neutral-900">
+            {["Profile", "Performance"].map((tab) => (
+              <TabsTrigger
+                key={tab}
+                value={tab.toLowerCase()}
+                className="data-[state=active]:bg-accent data-[state=active]:text-white text-gray-400 text-sm"
+              >
+                {tab}
+              </TabsTrigger>
+            ))}
+          </TabsList>
 
-      {/* Sidebar */}
-      <aside className="relative z-10 w-64 min-h-screen bg-gradient-to-b from-[#1E1E1E] to-[#121212] p-6 flex flex-col justify-between shadow-lg">
-        <div>
-          <div className="flex items-center gap-2 mb-8">
-            <Zap className="text-purple-500" />
-            <h1 className="text-lg font-semibold">Talk2Me</h1>
-          </div>
+          {/* Account Tab */}
+          <TabsContent value="profile" className="mt-8">
+            <Card className="bg-[#141414]/90 backdrop-blur-md border max-w-2xl border-white/10 text-white shadow-2xl">
+              <CardHeader>
+                <CardTitle>Profile Details</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Manage your personal information here.
+                </CardDescription>
+              </CardHeader>
+              <Separator className="bg-white/10" />
 
-          <nav className="flex flex-col gap-4">
-            <button className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-xl font-semibold">
-              <MessageSquare size={18} /> Chat
-            </button>
-            <button className="flex items-center gap-2 text-gray-400 hover:text-white">
-              <MessageSquare size={18} /> Chat History
-            </button>
-            <button className="flex items-center gap-2 text-gray-400 hover:text-white">
-              <User size={18} /> AI Personalities
-            </button>
-            <button className="flex items-center gap-2 text-gray-400 hover:text-white">
-              <Settings size={18} /> Settings
-            </button>
-          </nav>
-        </div>
-
-        <div className="bg-purple-700 rounded-2xl p-4 text-center">
-          <p className="text-sm mb-2 font-medium">Upgrade to Pro</p>
-          <p className="text-xs mb-4 opacity-80">
-            Unlock powerful features with pro upgrade today!
-          </p>
-          <button className="bg-white text-purple-700 px-4 py-2 rounded-xl text-sm font-semibold flex items-center justify-center gap-1 mx-auto">
-            Upgrade now <ArrowRight size={16} />
-          </button>
-        </div>
-      </aside>
-
-      {/* Main content */}
-      <main className="relative z-10 flex-1 flex flex-col px-12 py-10">
-        {/* Top Tabs */}
-        <div className="flex gap-6 border-b border-white/10 mb-10">
-          {[
-            "Profile Details",
-            "Preferences",
-            "Usage",
-            "Plan and Billing",
-            "Team",
-            "Integrations",
-            "API Dashboard",
-          ].map((tab, i) => (
-            <div
-              key={i}
-              className={`pb-3 cursor-pointer text-sm font-medium ${
-                i === 0
-                  ? "text-white border-b-2 border-white"
-                  : "text-gray-400 hover:text-white"
-              }`}
-            >
-              {tab}
-            </div>
-          ))}
-        </div>
-
-        {/* Card */}
-        <div className="bg-gradient-to-br from-[#181818] to-[#101010] p-8 rounded-2xl shadow-2xl border border-white/10 max-w-4xl mx-auto">
-          {/* Profile pic */}
-          <div className="flex items-center mb-8">
-            <div className="relative w-20 h-20">
-              <img
-                src="https://randomuser.me/api/portraits/men/32.jpg"
-                alt="avatar"
-                className="rounded-full w-full h-full object-cover"
-              />
-              <div className="absolute bottom-0 right-0 bg-white text-black rounded-full p-1 cursor-pointer">
-                ✎
-              </div>
-            </div>
-          </div>
-
-          {/* Form */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm mb-2">Your fullname*</label>
-              <input
-                type="text"
-                defaultValue="Happy Singh"
-                className="bg-[#1e1e1e] text-white"
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-2">Your email*</label>
-              <input
-                type="email"
-                defaultValue="happysingh@gmail.com"
-                className="bg-[#1e1e1e] text-white"
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-2">Password*</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  defaultValue="password123"
-                  className="bg-[#1e1e1e] text-white pr-10"
-                />
-                <div
-                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              <CardContent className="pt-8 space-y-8">
+                {/* Profile Picture */}
+                <div className="flex items-center gap-6">
+                  <div className="relative">
+                    {user?.image && (
+                      <Avatar className="h-20 w-20 rounded-full">
+                        <AvatarImage
+                          src={
+                            user?.image ||
+                            "https://api.dicebear.com/9.x/lorelei/svg"
+                          }
+                          alt={user?.name}
+                        />
+                        <AvatarFallback className="rounded-lg">
+                          CN
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                    <Button
+                      size="icon"
+                      variant={"default"}
+                      className="absolute bottom-0 right-0 rounded-full p-2"
+                    >
+                      <Upload size={10} />
+                    </Button>
+                  </div>
+                  <div>
+                    <p className="font-medium text-lg">
+                      {user?.name || "User"}
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      {user?.email || "No email"}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm mb-2">Confirm Password*</label>
-              <div className="relative">
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  defaultValue="password123"
-                  className="bg-[#1e1e1e] text-white pr-10"
-                />
-                <div
-                  className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff size={16} />
-                  ) : (
-                    <Eye size={16} />
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <div className="mt-8">
-            <button className="bg-purple-600 hover:bg-purple-700 px-6 py-2 text-white flex items-center gap-2">
-              Update <ArrowRight size={16} />
-            </button>
-          </div>
-        </div>
-      </main>
+                {/* Form Fields */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <Label>Your Name*</Label>
+                    <Input
+                      type="text"
+                      defaultValue={user?.name || ""}
+                      className="bg-[#1c1c1c] border-white/10 mt-4"
+                    />
+                  </div>
+                  <div>
+                    <Label>Email Address*</Label>
+                    <Input
+                      type="email"
+                      defaultValue={user?.email || ""}
+                      className="bg-[#1c1c1c] border-white/10 mt-4"
+                      disabled
+                    />
+                  </div>
+                </div>
+              </CardContent>
+
+              <CardFooter className="pt-6 flex justify-end">
+                <Button variant={"cta"} className="flex items-center gap-2">
+                  Save Changes <ArrowRight size={16} />
+                </Button>
+              </CardFooter>
+            </Card>
+          </TabsContent>
+
+          {/* Password Tab */}
+          <TabsContent value="performance" className="mt-8 overflow-hidden">
+            <Card className=" bg-[#141414]/90 backdrop-blur-md border border-white/10 text-white shadow-2xl">
+              <CardHeader>
+                <CardTitle>Your performance</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Monthly performance of basis of score and number of mistakes
+                </CardDescription>
+              </CardHeader>
+              <Separator className="bg-white/10" />
+
+              <CardContent className=" space-y-6">
+                <ChartBarMultiple />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }

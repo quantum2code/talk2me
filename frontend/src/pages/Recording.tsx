@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import ChatWindow from "@/components/ChatWindow";
 import { startConversation } from "@/utils/axios";
 import { useNavigate } from "react-router";
+import RecordingBtn from "@/components/RecordingBtn";
 
 function App() {
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -21,9 +22,7 @@ function App() {
   const [conversations, setConversations] = useState<
     { title: string; id: string; url: string }[]
   >([]);
-  const [conversationId, setConversationId] = useState<string | null>(
-    localStorage.getItem("conversationId")
-  );
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const { conversationsQuery } = useFetchMessages({
     currentConversationId: conversationId!,
   });
@@ -31,7 +30,7 @@ function App() {
   const navigate = useNavigate();
 
   const getConversationId = async () => {
-    let tempId = conversationId || localStorage.getItem("conversationId");
+    let tempId = conversationId;
     if (!tempId) {
       tempId = await startConversation();
       setConversationId(tempId);
@@ -86,14 +85,9 @@ function App() {
           type: AUDIO_FILE_TYPE,
         });
 
-        if (!conversationId) {
-          const tempId = await getConversationId();
-          await processAudio(audioBlob, tempId!);
-          navigate(`/c/${tempId}`);
-        } else {
-          await processAudio(audioBlob, conversationId!);
-          navigate(`/c/${conversationId}`);
-        }
+        const tempId = await getConversationId();
+        await processAudio(audioBlob, tempId!);
+        navigate(`/c/${tempId}`);
 
         chunksRef.current = [];
       };
@@ -147,17 +141,29 @@ function App() {
     <div className="flex h-screen w-screen bg-background">
       <SidebarProvider>
         <AppSidebar startConversation={startNewConversation} data={data} />
-        <SidebarInset className="bg-accent-2/50">
-          <ChatWindow messages={[]} />
+        <SidebarInset className="bg-gradient-to-b from-accent/60 to-accent/10 relative">
+          <ChatWindow
+            setIsCtxWindowOpen={null}
+            setMessageErrorCtx={null}
+            isCtxWindowOpen={null}
+            messages={[]}
+          />
           {!stream && (
             <Button className="fixed right-2 top-2 z-100" onClick={getStream}>
               Request Mic Permission
             </Button>
           )}
-          <div className="fixed bottom-0 w-full h-[20rem] pointer-events-none">
+          <div className="absolute inset-x-0 w-full z-10 bottom-0 h-[20rem] pointer-events-none">
             {isRecording && <AudioVisualizer stream={stream} />}
           </div>
-          <div className="fixed right-2 z-60 bottom-2 flex gap-2">
+          {/* Btn */}
+          <RecordingBtn
+            isRecording={isRecording}
+            stopRecording={stopRecording}
+            startRecording={startRecording}
+            recorder={recorder}
+          />
+          {/* <div className="fixed right-2 z-60 bottom-2 flex gap-2">
             <Button
               onClick={startRecording}
               disabled={!recorder}
@@ -169,7 +175,7 @@ function App() {
             <Button onClick={stopRecording} disabled={!recorder}>
               Stop
             </Button>
-          </div>
+          </div> */}
         </SidebarInset>
       </SidebarProvider>
     </div>
