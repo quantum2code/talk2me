@@ -23,8 +23,12 @@ import {
 import { NavUser } from "./NavUser";
 import LogoSVG from "./LogoSVG";
 import { Button } from "./ui/button";
+<<<<<<< HEAD
 import { Link } from "react-router";
 import { BsSoundwave } from "react-icons/bs";
+=======
+import { Link, useLocation } from "react-router";
+>>>>>>> working
 
 // This is sample data.
 // const data = {
@@ -43,7 +47,11 @@ import { BsSoundwave } from "react-icons/bs";
 
 export function AppSidebar({
   data,
+<<<<<<< HEAD
   startNewConv,
+=======
+  startConversation,
+>>>>>>> working
   ...props
 }: {
   data: {
@@ -54,30 +62,41 @@ export function AppSidebar({
     };
     navMain: Array<{
       title: string;
-      items: Array<{
-        title: string;
-        url: string;
-        isActive?: boolean;
-        id: string;
-      }>;
+      items:
+        | Array<{
+            title: string;
+            url: string;
+            isActive?: boolean;
+            id: string;
+          }>
+        | undefined;
     }>;
   };
+<<<<<<< HEAD
   startNewConv: () => void;
+=======
+  startConversation: () => void;
+>>>>>>> working
 } & React.ComponentProps<typeof Sidebar>) {
+  const location = useLocation();
   return (
     <Sidebar {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
+<<<<<<< HEAD
               <a href="#">
                 <div className="bg-sidebar-accent text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   {/* <GalleryVerticalEnd className="size-4" /> */}
+=======
+              <a href="/">
+                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+>>>>>>> working
                   <LogoSVG classname="w-4 h-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
                   <span className="font-semibold">Talk2Me</span>
-                  {/* <span className="">v1.0.0</span> */}
                 </div>
               </a>
             </SidebarMenuButton>
@@ -89,9 +108,14 @@ export function AppSidebar({
           <Button
             variant={"cta"}
             className="border-2 border-white/20"
+<<<<<<< HEAD
             onClick={startNewConv}
           >
             <BsSoundwave />
+=======
+            onClick={startConversation}
+          >
+>>>>>>> working
             Start new Chat
           </Button>
         </SidebarGroup>
@@ -114,18 +138,28 @@ export function AppSidebar({
                   {item.items?.length ? (
                     <CollapsibleContent>
                       <SidebarMenuSub>
-                        {item.items.map((item) => (
-                          <SidebarMenuSubItem key={item.title + item.id}>
-                            <SidebarMenuSubButton
-                              asChild
-                              isActive={item.isActive}
-                            >
-                              <Link key={item.id} to={`/c/${item.id}`}>
-                                {item.title}
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
+                        {item.items.map((item, idx) => {
+                          const isActive =
+                            location.pathname === `/c/${item.id}`;
+
+                          return (
+                            <SidebarMenuSubItem key={item.title + item.id}>
+                              <SidebarMenuSubButton
+                                asChild
+                                isActive={isActive}
+                                className={`${
+                                  isActive
+                                    ? "bg-gradient-to-r from-accent/60 to-accent/10 py-4 border border-accent"
+                                    : ""
+                                }`}
+                              >
+                                <Link key={item.id} to={`/c/${item.id}`}>
+                                  {idx + 1 + ". " + item.title}
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          );
+                        })}
                       </SidebarMenuSub>
                     </CollapsibleContent>
                   ) : null}
@@ -136,7 +170,7 @@ export function AppSidebar({
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

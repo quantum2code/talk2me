@@ -2,17 +2,17 @@ import { useState, useEffect, useRef } from "react";
 import { BsRecordCircle } from "react-icons/bs";
 import { BsPauseCircle } from "react-icons/bs";
 import AudioVisualizer from "../components/AudioVisualizer";
-import { AUDIO_FILE_TYPE, MAX_FILE_SIZE } from "../../../shared/src/constants";
+import { AUDIO_FILE_TYPE, MAX_FILE_SIZE } from "shared/src/constants";
 import { useProcessAudio } from "../hooks/useProcessAudio";
+import { type ErrorDetail, type Message } from "shared/src/types";
+import MessageContextWindow from "../components/MessageContextWindow";
+import { useConversation } from "../hooks/useConversation";
 import { useFetchMessages } from "../hooks/useFetchMessages";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-
-import PracticePage from "../components/recordingPage";
 
 import { AppSidebar } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
 import ChatWindow from "@/components/ChatWindow";
-import { startConversation } from "@/utils/axios";
 import { useNavigate } from "react-router";
 import RecordingBtn from "@/components/RecordingBtn";
 
@@ -20,27 +20,17 @@ function App() {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
   const [isRecording, setIsRecording] = useState(false);
-  const { processAudio } = useProcessAudio();
-  const [conversations, setConversations] = useState<
-    { title: string; id: string; url: string }[]
-  >([]);
-  const [conversationId, setConversationId] = useState<string | null>(null);
-  const { conversationsQuery } = useFetchMessages({
-    currentConversationId: conversationId!,
+  const { messages, processAudio, setMessages } = useProcessAudio();
+  const [messageErrorCtx, setMessageErrorCtx] = useState<ErrorDetail | null>(
+    null
+  );
+  const { conversationId, setConversationId } = useConversation();
+  const { conversationsQuery, messagesQuery } = useFetchMessages({
+    currentConversationId: conversationId,
   });
+  const [isCtxWindowOpen, setIsCtxWindowOpen] = useState(true);
   const chunksRef = useRef<Blob[]>([]);
   const navigate = useNavigate();
-
-  const getConversationId = async () => {
-    let tempId = conversationId;
-    if (!tempId) {
-      tempId = await startConversation();
-      setConversationId(tempId);
-      localStorage.setItem("conversationId", tempId);
-      return tempId;
-    }
-    return tempId;
-  };
 
   const getStream = async () => {
     try {
@@ -54,16 +44,10 @@ function App() {
   };
 
   useEffect(() => {
-    if (conversationsQuery.data) {
-      setConversations(
-        conversationsQuery.data.map((conv) => ({
-          title: conv.title,
-          id: conv.id,
-          url: "#",
-        }))
-      );
+    if (messagesQuery.data) {
+      setMessages(messagesQuery.data!);
     }
-  }, [conversationsQuery.data]);
+  }, [messagesQuery.data, setMessages]);
 
   useEffect(() => {
     if (stream) {
@@ -86,11 +70,10 @@ function App() {
         const audioBlob = new Blob(chunksRef.current, {
           type: AUDIO_FILE_TYPE,
         });
-        console.log(conversationId);
 
-        const tempId = await getConversationId();
-        await processAudio(audioBlob, tempId!);
-        navigate(`/c/${tempId}`);
+        if (conversationId) {
+          await processAudio(audioBlob, conversationId!);
+        }
 
         chunksRef.current = [];
       };
@@ -123,33 +106,35 @@ function App() {
   const startNewConversation = () => {
     setConversationId(null);
     localStorage.removeItem("conversationId");
+    setMessages([]);
+    navigate("/chat/");
     console.log("NEW CONVERSATION STARTED");
   };
 
   const data = {
     user: {
-      name: session?.user?.name || "John Doe",
-      email: session?.user?.email || "john@doe.org",
-      avatar: session?.user?.image || "",
+      name: "John Doe",
+      email: "john@doe.org",
+      avatar: "",
     },
     navMain: [
       {
         title: "Conversations",
-        items: conversations,
+        items: conversationsQuery.data,
       },
     ],
   };
 
   return (
-    <div className="flex h-screen w-screen bg-background pt-[0px]">
+    <div className="flex h-screen w-screen bg-background">
       <SidebarProvider>
         <AppSidebar startConversation={startNewConversation} data={data} />
         <SidebarInset className="bg-gradient-to-b from-accent/60 to-accent/10 relative">
           <ChatWindow
-            setIsCtxWindowOpen={null}
-            setMessageErrorCtx={null}
-            isCtxWindowOpen={null}
-            messages={[]}
+            messages={messages}
+            setIsCtxWindowOpen={setIsCtxWindowOpen}
+            setMessageErrorCtx={setMessageErrorCtx}
+            isCtxWindowOpen={isCtxWindowOpen}
           />
           {!stream && (
             <Button className="fixed right-2 top-2 z-100" onClick={getStream}>
@@ -159,7 +144,6 @@ function App() {
           <div className="absolute inset-x-0 w-full z-10 bottom-0 h-[20rem] pointer-events-none">
             {isRecording && <AudioVisualizer stream={stream} />}
           </div>
-          {/* Btn */}
           <RecordingBtn
             isRecording={isRecording}
             stopRecording={stopRecording}
@@ -179,6 +163,11 @@ function App() {
               Stop
             </Button>
           </div> */}
+          <MessageContextWindow
+            messageErrorCtx={messageErrorCtx}
+            isCtxWindowOpen={isCtxWindowOpen}
+            setIsCtxWindowOpen={setIsCtxWindowOpen}
+          />
         </SidebarInset>
       </SidebarProvider>
     </div>

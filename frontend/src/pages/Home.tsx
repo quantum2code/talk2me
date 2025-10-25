@@ -6,12 +6,13 @@ import { useNavigate, Link } from "react-router-dom";
 
 import LogoSVG from "@/components/LogoSVG";
 import { Button } from "@/components/ui/button";
+import { CometCard } from "@/components/ui/comet-card";
 
 function Home() {
   const navigate = useNavigate();
 
   return (
-    <div className="w-[calc(100vw-15px)] overflow-hidden flex flex-col bg-black">
+    <div className="w-[calc(100vw-15px)] h-screen overflow-hidden flex flex-col bg-black">
       <section id="home" className=" text-white overflow-hidden relative mb-20">
         {/* Navbar */}
         <nav className="w-full flex fixed justify-between items-center py-6 px-10 sm:px-10 z-30">
@@ -74,28 +75,35 @@ function Home() {
         </div>
 
         {/* Girl + Wave */}
-        {/* <div className="absolute bottom-0 sm:bottom-6 left-0 right-0 flex items-end justify-between px-4 sm:px-8 z-10">
-          <img
-            src="/girl.png"
-            alt="Girl with phone"
-            className="w-[140px] sm:w-[200px] md:w-[260px] lg:w-[320px] xl:w-[360px] object-contain"
-          />
-        </div> */}
+
+        <div className="fixed z-80 -bottom-[5rem] left-1/2 -translate-x-1/2 flex items-end justify-between px-4 sm:px-8">
+          <CometCard>
+            <div className="p-3 bg-neutral-900 rounded-2xl">
+              <p className="font-mono text-neutral-300 font-light mb-3">
+                #Talk2me
+              </p>
+              <img
+                src="/image.png"
+                alt="Girl with phone"
+                className="w-[50rem] h-[20rem] object-cover rounded-xl"
+              />
+            </div>
+          </CometCard>
+        </div>
       </section>
 
-      <div className="relative w-full h-[40rem] flex items-center">
+      <div className="relative w-full h-fit flex items-center ">
         {/* Mask layer that blurs */}
-        <div className="absolute bottom-0 w-full h-full z-40 flex backdrop-blur-2xl"></div>
-        <div className="absolute bottom-0 w-full h-full z-50 flex">
+        <div className="fixed -bottom-1/2 w-full h-full z-40 flex backdrop-blur-2xl"></div>
+        <div className="fixed -bottom-1/2 w-full h-full z-50 flex">
           <div
-            className="flex-1 h-full  backdrop-blur-2xl 
+            className="flex-1 h-full w-screen  backdrop-blur-2xl 
   [mask-image:linear-gradient(to_right,black,#00000066)] 
   [mask-repeat:repeat-x] [mask-size:80px_100%]"
           ></div>
         </div>
-
         {/* Purple background */}
-        <div className="bg-purple-500 rounded-[100%] w-full h-[25rem] animate-pulse"></div>
+        <div className="fixed -bottom-1/3 bg-[#af40db]/40 rounded-[100%] w-full h-[25rem]"></div>
       </div>
     </div>
   );
