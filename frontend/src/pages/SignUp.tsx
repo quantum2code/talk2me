@@ -5,11 +5,7 @@ import LogoSVG from "@/components/LogoSVG";
 import { FaGoogle } from "react-icons/fa";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
-<<<<<<< HEAD
 import { authClient } from "@/lib/auth-client";
-=======
-import { authClient } from "@/hooks/useAuth";
->>>>>>> working
 
 function Signup() {
   const navigate = useNavigate();
