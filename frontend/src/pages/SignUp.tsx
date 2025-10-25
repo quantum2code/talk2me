@@ -32,13 +32,7 @@ function Signup() {
       <button
         onClick={() => navigate("/")}
         className="absolute top-6 left-4 hover:opacity-80 transition"
-      >
-        {/* <img
-          src="/assets/back-arrow.png"
-          alt="Back"
-          className="h-8 w-8 sm:h-10 sm:w-10"
-        /> */}
-      </button>
+      ></button>
 
       {/* Logo */}
       <div className="absolute top-6 left-14 flex items-center gap-2 font-bold text-xl ">
