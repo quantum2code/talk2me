@@ -2,10 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import { BsRecordCircle } from "react-icons/bs";
 import { BsPauseCircle } from "react-icons/bs";
 import AudioVisualizer from "../components/AudioVisualizer";
-import { AUDIO_FILE_TYPE, MAX_FILE_SIZE } from "shared/src/constants";
+import { AUDIO_FILE_TYPE, MAX_FILE_SIZE } from "../../../shared/src/constants";
 import { useProcessAudio } from "../hooks/useProcessAudio";
 import { useFetchMessages } from "../hooks/useFetchMessages";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+
+import PracticePage from "../components/recordingPage";
 
 import { AppSidebar } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
@@ -84,6 +86,7 @@ function App() {
         const audioBlob = new Blob(chunksRef.current, {
           type: AUDIO_FILE_TYPE,
         });
+        console.log(conversationId);
 
         const tempId = await getConversationId();
         await processAudio(audioBlob, tempId!);
@@ -125,9 +128,9 @@ function App() {
 
   const data = {
     user: {
-      name: "John Doe",
-      email: "john@doe.org",
-      avatar: "",
+      name: session?.user?.name || "John Doe",
+      email: session?.user?.email || "john@doe.org",
+      avatar: session?.user?.image || "",
     },
     navMain: [
       {
@@ -138,7 +141,7 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen w-screen bg-background">
+    <div className="flex h-screen w-screen bg-background pt-[0px]">
       <SidebarProvider>
         <AppSidebar startConversation={startNewConversation} data={data} />
         <SidebarInset className="bg-gradient-to-b from-accent/60 to-accent/10 relative">

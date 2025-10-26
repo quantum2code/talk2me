@@ -1,7 +1,7 @@
 import {
   aiAnalysisResponseSchema,
   transcriptResponseSchema,
-} from "shared/src/types/zodTypes";
+} from "../../../shared/src/types/zodTypes";
 import type { AxiosResponse } from "axios";
 import axios from "axios";
 import z from "zod";

@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { type Message } from "shared/src/types";
+import { type Message } from "../../../shared/src/types";
 import { postAnalysis, postTranscription } from "../utils/axios";
 import { fromDataConstructor } from "../utils/formData";
 
@@ -9,6 +9,7 @@ export function useProcessAudio() {
   const processAudio = useCallback(
     async (blobData: Blob, conversationId: string) => {
       try {
+        console.log("conv id: " + conversationId);
         const formData = fromDataConstructor(blobData, conversationId);
 
         const transcriptResult = await postTranscription(formData);
@@ -21,8 +22,6 @@ export function useProcessAudio() {
             transcript: transcriptResult.transcript,
           },
         ]);
-
-        console.log("TRANSCRIPT RESULT: ", transcriptResult);
 
         //analyze it
         const analyzeResult = await postAnalysis(
