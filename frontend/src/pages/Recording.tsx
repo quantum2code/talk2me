@@ -4,6 +4,7 @@ import { BsPauseCircle } from "react-icons/bs";
 import AudioVisualizer from "../components/AudioVisualizer";
 import { AUDIO_FILE_TYPE, MAX_FILE_SIZE } from "shared/src/constants";
 import { useProcessAudio } from "../hooks/useProcessAudio";
+import { useMicrophone } from "../hooks/useMicrophone";
 import { useFetchMessages } from "../hooks/useFetchMessages";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
@@ -15,7 +16,7 @@ import { useNavigate } from "react-router";
 import RecordingBtn from "@/components/RecordingBtn";
 
 function App() {
-  const [stream, setStream] = useState<MediaStream | null>(null);
+  const { stream, requestPermission } = useMicrophone();
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const { processAudio } = useProcessAudio();
@@ -40,17 +41,6 @@ function App() {
     return tempId;
   };
 
-  const getStream = async () => {
-    try {
-      const userStream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-      });
-      setStream(userStream);
-    } catch (e) {
-      console.error("ERROR getting stream: ", e);
-    }
-  };
-
   useEffect(() => {
     if (conversationsQuery.data) {
       setConversations(
@@ -58,7 +48,7 @@ function App() {
           title: conv.title,
           id: conv.id,
           url: "#",
-        }))
+        })),
       );
     }
   }, [conversationsQuery.data]);
@@ -93,9 +83,7 @@ function App() {
       };
     }
     return () => {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
+      // Don't stop stream on unmount - it persists globally
     };
   }, [stream]);
 
@@ -149,7 +137,10 @@ function App() {
             messages={[]}
           />
           {!stream && (
-            <Button className="fixed right-2 top-2 z-100" onClick={getStream}>
+            <Button
+              className="fixed right-2 top-2 z-100"
+              onClick={requestPermission}
+            >
               Request Mic Permission
             </Button>
           )}

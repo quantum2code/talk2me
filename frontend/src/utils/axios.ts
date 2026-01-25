@@ -10,7 +10,7 @@ export const BACKEND_URL = "http://localhost:3000";
 export const postTranscription = async (formData: FormData) => {
   const result: AxiosResponse = await axios.post(
     `${BACKEND_URL}/api/transcription`,
-    formData
+    formData,
   );
   const parsed = transcriptResponseSchema.safeParse(result?.data);
   if (!parsed.success)
@@ -21,7 +21,7 @@ export const postTranscription = async (formData: FormData) => {
 export const postAnalysis = async (
   transcript: string,
   msgId: string,
-  convId: string
+  convId: string,
 ) => {
   const result: AxiosResponse = await axios.post(
     `${BACKEND_URL}/api/analysis`,
@@ -29,7 +29,7 @@ export const postAnalysis = async (
       transcript,
       messageId: msgId,
       conversationId: convId,
-    }
+    },
   );
   const parsed = aiAnalysisResponseSchema.safeParse(result?.data);
   if (!parsed.success)
@@ -49,7 +49,7 @@ export const startConversation = async () => {
 
 export const getConversations = async () => {
   const result: AxiosResponse = await axios.get(
-    `${BACKEND_URL}/api/conversations`
+    `${BACKEND_URL}/api/conversations`,
   );
   const parsed = z
     .object({ id: z.string(), title: z.string() })
@@ -62,10 +62,29 @@ export const getConversations = async () => {
 
 export const getConversationById = async (id: string) => {
   const result: AxiosResponse = await axios.get(
-    `${BACKEND_URL}/api/conversations/${id}`
+    `${BACKEND_URL}/api/conversations/${id}`,
   );
   const parsed = z.array(aiAnalysisResponseSchema).safeParse(result?.data);
   if (!parsed.success || !parsed.data)
+    throw new Error(`ZOD PARSING ERROR\n${parsed.error.message}`);
+  return parsed.data;
+};
+
+export const generateTitle = async (
+  conversationId: string,
+  transcript: string,
+) => {
+  const result: AxiosResponse = await axios.post(`${BACKEND_URL}/api/title`, {
+    conversationId,
+    transcript,
+  });
+  const parsed = z
+    .object({
+      title: z.string(),
+      conversationId: z.string(),
+    })
+    .safeParse(result?.data);
+  if (!parsed.success)
     throw new Error(`ZOD PARSING ERROR\n${parsed.error.message}`);
   return parsed.data;
 };

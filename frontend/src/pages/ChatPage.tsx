@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { BsRecordCircle } from "react-icons/bs";
-import { BsPauseCircle } from "react-icons/bs";
 import AudioVisualizer from "../components/AudioVisualizer";
 import { AUDIO_FILE_TYPE, MAX_FILE_SIZE } from "shared/src/constants";
 import { useProcessAudio } from "../hooks/useProcessAudio";
-import { type ErrorDetail, type Message } from "shared/src/types";
+import { useMicrophone } from "../hooks/useMicrophone";
+import { type ErrorDetail } from "shared/src/types";
 import MessageContextWindow from "../components/MessageContextWindow";
 import { useConversation } from "../hooks/useConversation";
 import { useFetchMessages } from "../hooks/useFetchMessages";
@@ -17,31 +16,21 @@ import { useNavigate } from "react-router";
 import RecordingBtn from "@/components/RecordingBtn";
 
 function App() {
-  const [stream, setStream] = useState<MediaStream | null>(null);
+  const { stream, requestPermission } = useMicrophone();
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const { messages, processAudio, setMessages } = useProcessAudio();
   const [messageErrorCtx, setMessageErrorCtx] = useState<ErrorDetail | null>(
-    null
+    null,
   );
-  const { conversationId, setConversationId } = useConversation();
+  const { conversationId, setConversationId, ensureConversationId } =
+    useConversation();
   const { conversationsQuery, messagesQuery } = useFetchMessages({
     currentConversationId: conversationId,
   });
   const [isCtxWindowOpen, setIsCtxWindowOpen] = useState(true);
   const chunksRef = useRef<Blob[]>([]);
   const navigate = useNavigate();
-
-  const getStream = async () => {
-    try {
-      const userStream = await navigator.mediaDevices.getUserMedia({
-        audio: true,
-      });
-      setStream(userStream);
-    } catch (e) {
-      console.error("ERROR getting stream: ", e);
-    }
-  };
 
   useEffect(() => {
     if (messagesQuery.data) {
@@ -71,17 +60,26 @@ function App() {
           type: AUDIO_FILE_TYPE,
         });
 
-        if (conversationId) {
-          await processAudio(audioBlob, conversationId!);
-        }
+        // Ensure we have a conversation ID
+        const convId = await ensureConversationId();
+        const isFirstMessage = messages.length === 0;
+
+        // Process audio with navigation callback for first message
+        await processAudio(audioBlob, convId, {
+          isFirstMessage,
+          onFirstMessage: (id) => {
+            // Navigate to conversation page after first message
+            if (window.location.pathname === "/chat/") {
+              navigate(`/c/${id}`);
+            }
+          },
+        });
 
         chunksRef.current = [];
       };
     }
     return () => {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
+      // Don't stop stream on unmount - it persists globally
     };
   }, [stream]);
 
@@ -120,7 +118,10 @@ function App() {
     navMain: [
       {
         title: "Conversations",
-        items: conversationsQuery.data,
+        items: conversationsQuery.data?.map((conv) => ({
+          ...conv,
+          url: `/c/${conv.id}`,
+        })),
       },
     ],
   };
@@ -137,7 +138,10 @@ function App() {
             isCtxWindowOpen={isCtxWindowOpen}
           />
           {!stream && (
-            <Button className="fixed right-2 top-2 z-100" onClick={getStream}>
+            <Button
+              className="fixed right-2 top-2 z-100"
+              onClick={requestPermission}
+            >
               Request Mic Permission
             </Button>
           )}
@@ -150,19 +154,6 @@ function App() {
             startRecording={startRecording}
             recorder={recorder}
           />
-          {/* <div className="fixed right-2 z-60 bottom-2 flex gap-2">
-            <Button
-              onClick={startRecording}
-              disabled={!recorder}
-              className="flex gap-2 items-center"
-            >
-              {isRecording || !stream ? <BsRecordCircle /> : <BsPauseCircle />}
-              Start
-            </Button>
-            <Button onClick={stopRecording} disabled={!recorder}>
-              Stop
-            </Button>
-          </div> */}
           <MessageContextWindow
             messageErrorCtx={messageErrorCtx}
             isCtxWindowOpen={isCtxWindowOpen}

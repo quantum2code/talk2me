@@ -5,6 +5,7 @@ import { analysisHandler } from "../controllers/analysisHandler";
 import { startConversationHandler } from "../controllers/startConversationHandler";
 import { getConversationsHandler } from "../controllers/getConversationsHandler";
 import { getConversationByIdHandler } from "../controllers/getConversationByIdHandler";
+import { titleGenerationHandler } from "../controllers/titleGenerationHandler";
 import { toNodeHandler } from "better-auth/node";
 // import { auth } from "../utils/auth";
 
@@ -14,6 +15,7 @@ const apiRouter = Router();
 
 apiRouter.post("/transcription", upload.single("audio"), transcriptionHandler);
 apiRouter.post("/analysis", analysisHandler);
+apiRouter.post("/title", titleGenerationHandler);
 
 apiRouter.post("/start", startConversationHandler);
 apiRouter.get("/conversations", getConversationsHandler);

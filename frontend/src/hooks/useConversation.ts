@@ -5,7 +5,7 @@ import { useParams } from "react-router";
 export const useConversation = () => {
   const { convId } = useParams();
   const [conversationId, setConversationId] = useState<string | null>(
-    () => convId || localStorage.getItem("conversationId")
+    () => convId || localStorage.getItem("conversationId"),
   );
 
   useEffect(() => {
@@ -14,15 +14,17 @@ export const useConversation = () => {
       localStorage.setItem("conversationId", convId);
     }
   }, [convId]);
-  const getConversationId = async () => {
-    let tempId = conversationId || localStorage.getItem("conversationId");
-    if (!tempId) {
-      tempId = await startConversation();
-      setConversationId(tempId);
-      localStorage.setItem("conversationId", tempId);
-      return tempId;
-    }
-    return convId;
+
+  const ensureConversationId = async () => {
+    // If we already have a conversationId, return it
+    if (conversationId) return conversationId;
+
+    // Otherwise, create a new conversation
+    const newId = await startConversation();
+    setConversationId(newId);
+    localStorage.setItem("conversationId", newId);
+    return newId;
   };
-  return { conversationId, setConversationId, getConversationId };
+
+  return { conversationId, setConversationId, ensureConversationId };
 };
