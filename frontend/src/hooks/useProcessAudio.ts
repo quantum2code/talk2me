@@ -18,6 +18,7 @@ export function useProcessAudio() {
       options?: ProcessAudioOptions,
     ) => {
       try {
+        console.log("conv id: " + conversationId);
         const formData = fromDataConstructor(blobData, conversationId);
 
         const transcriptResult = await postTranscription(formData);

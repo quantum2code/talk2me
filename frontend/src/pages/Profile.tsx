@@ -13,12 +13,20 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
+<<<<<<< HEAD
+import { authClient } from "@/lib/auth-client";
+
+export default function ProfileSettings() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+=======
 import { ChartBarMultiple } from "@/components/BarChart";
 import { authClient } from "@/hooks/useAuth";
 import { AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Avatar } from "@/components/ui/avatar";
 
 export default function ProfileSettings() {
+>>>>>>> working
   const { data: session, isPending } = authClient.useSession(); // ✅ fetch session data
 
   if (isPending) {
@@ -35,9 +43,15 @@ export default function ProfileSettings() {
     <div className="min-h-screen w-screen bg-[#0D0D0D] text-white flex flex-col items-center py-12 px-4 relative overflow-hidden">
       <div className="w-full max-w-5xl">
         {/* Tabs */}
+<<<<<<< HEAD
+        <Tabs defaultValue="account" className="w-full mb-10">
+          <TabsList className="bg-neutral-900">
+            {["Account", "Password"].map((tab) => (
+=======
         <Tabs defaultValue="profile" className="w-full mb-10">
           <TabsList className="bg-neutral-900">
             {["Profile", "Performance"].map((tab) => (
+>>>>>>> working
               <TabsTrigger
                 key={tab}
                 value={tab.toLowerCase()}
@@ -49,8 +63,13 @@ export default function ProfileSettings() {
           </TabsList>
 
           {/* Account Tab */}
+<<<<<<< HEAD
+          <TabsContent value="account" className="mt-8">
+            <Card className="bg-[#141414]/90 backdrop-blur-md border border-white/10 text-white shadow-2xl">
+=======
           <TabsContent value="profile" className="mt-8">
             <Card className="bg-[#141414]/90 backdrop-blur-md border max-w-2xl border-white/10 text-white shadow-2xl">
+>>>>>>> working
               <CardHeader>
                 <CardTitle>Profile Details</CardTitle>
                 <CardDescription className="text-gray-400">
@@ -63,6 +82,16 @@ export default function ProfileSettings() {
                 {/* Profile Picture */}
                 <div className="flex items-center gap-6">
                   <div className="relative">
+<<<<<<< HEAD
+                    <img
+                      src={
+                        user?.image ||
+                        "https://api.dicebear.com/9.x/lorelei/svg"
+                      }
+                      alt="avatar"
+                      className="rounded-full w-24 h-24 object-cover border-2 border-white/10"
+                    />
+=======
                     {user?.image && (
                       <Avatar className="h-20 w-20 rounded-full">
                         <AvatarImage
@@ -77,6 +106,7 @@ export default function ProfileSettings() {
                         </AvatarFallback>
                       </Avatar>
                     )}
+>>>>>>> working
                     <Button
                       size="icon"
                       variant={"default"}
@@ -126,19 +156,78 @@ export default function ProfileSettings() {
           </TabsContent>
 
           {/* Password Tab */}
+<<<<<<< HEAD
+          <TabsContent value="password" className="mt-8">
+            <Card className="bg-[#141414]/90 backdrop-blur-md border border-white/10 text-white shadow-2xl">
+              <CardHeader>
+                <CardTitle>Change Password</CardTitle>
+                <CardDescription className="text-gray-400">
+                  Update your account password below.
+=======
           <TabsContent value="performance" className="mt-8 overflow-hidden">
             <Card className=" bg-[#141414]/90 backdrop-blur-md border border-white/10 text-white shadow-2xl">
               <CardHeader>
                 <CardTitle>Your performance</CardTitle>
                 <CardDescription className="text-gray-400">
                   Monthly performance of basis of score and number of mistakes
+>>>>>>> working
                 </CardDescription>
               </CardHeader>
               <Separator className="bg-white/10" />
 
+<<<<<<< HEAD
+              <CardContent className="pt-8 space-y-6">
+                <div>
+                  <Label>New Password*</Label>
+                  <div className="relative">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      className="bg-[#1c1c1c] border-white/10 focus:border-purple-500 pr-10"
+                    />
+                    <div
+                      className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-white"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <Label>Confirm Password*</Label>
+                  <div className="relative">
+                    <Input
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      className="bg-[#1c1c1c] border-white/10 focus:border-purple-500 pr-10"
+                    />
+                    <div
+                      className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-400 hover:text-white"
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff size={18} />
+                      ) : (
+                        <Eye size={18} />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+
+              <CardFooter className="pt-6 flex justify-end">
+                <Button className="bg-purple-600 hover:bg-purple-700 flex items-center gap-2">
+                  Update Password <ArrowRight size={16} />
+                </Button>
+              </CardFooter>
+=======
               <CardContent className=" space-y-6">
                 <ChartBarMultiple />
               </CardContent>
+>>>>>>> working
             </Card>
           </TabsContent>
         </Tabs>

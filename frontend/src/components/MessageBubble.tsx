@@ -5,8 +5,12 @@ import {
   type AIAnalysis,
   type ErrorDetail,
   type Message,
+<<<<<<< HEAD
+} from "../../../shared/src/types";
+=======
 } from "shared/src/types";
 import { Separator } from "./ui/separator";
+>>>>>>> working
 
 const CompChatBubble = ({
   msg,

@@ -5,11 +5,10 @@ import LogoSVG from "@/components/LogoSVG";
 import { FaGoogle } from "react-icons/fa";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { authClient } from "@/hooks/useAuth";
+import { authClient } from "@/lib/auth-client";
 
 function Signup() {
   const navigate = useNavigate();
-  // For GOOGLE Login Handeling But using Firebase don't change the code without discussing - Saikat...
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -20,19 +19,20 @@ function Signup() {
     });
   };
 
+  const signIn = async () => {
+    const { data, error } = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "http://localhost:5173/c/",
+    });
+  };
+
   return (
     <div className="min-h-screen w-screen flex items-center justify-center bg-gradient-to-br from-[#1e0033] to-black px-4 relative text-white">
       {/* Back Btn */}
       <button
         onClick={() => navigate("/")}
         className="absolute top-6 left-4 hover:opacity-80 transition"
-      >
-        {/* <img
-          src="/assets/back-arrow.png"
-          alt="Back"
-          className="h-8 w-8 sm:h-10 sm:w-10"
-        /> */}
-      </button>
+      ></button>
 
       {/* Logo */}
       <div className="absolute top-6 left-14 flex items-center gap-2 font-bold text-xl ">
