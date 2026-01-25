@@ -24,12 +24,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-<<<<<<< HEAD
         <Route path="/c/:convId?" element={<Recording />} />
-=======
-        <Route path="/chat/" element={<Recording />} />
-        <Route path="/c/:convId" element={<ChatPage />} />
->>>>>>> working
         <Route path="/profile" element={<Profile />} />
         <Route path="/aistats" element={<AIStats />} />
 

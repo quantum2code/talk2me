@@ -17,7 +17,6 @@ export const useConversation = () => {
       localStorage.removeItem("conversationId");
     }
   }, [convId]);
-<<<<<<< HEAD
 
   const ensureConversationId = async () => {
     // If we already have a conversationId, return it
@@ -28,16 +27,6 @@ export const useConversation = () => {
     setConversationId(newId);
     localStorage.setItem("conversationId", newId);
     return newId;
-=======
-  const getConversationId = async () => {
-    if (!conversationId) {
-      const tempId = await startConversation();
-      setConversationId(tempId);
-      localStorage.setItem("conversationId", tempId);
-      return tempId;
-    }
-    return conversationId;
->>>>>>> supriyo
   };
 
   return { conversationId, setConversationId, ensureConversationId };

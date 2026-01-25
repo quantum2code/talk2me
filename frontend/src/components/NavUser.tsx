@@ -70,7 +70,6 @@ export function NavUser() {
               >
                 <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                   <Avatar className="h-8 w-8 rounded-lg">
-<<<<<<< HEAD
                     <AvatarImage
                       src={user.avatar || userAvatar}
                       alt={user.name}
@@ -80,20 +79,11 @@ export function NavUser() {
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-medium">{user.name}</span>
                     <span className="truncate text-xs">{user.email}</span>
-=======
-                    <AvatarImage src={user?.image || ""} alt={user?.name} />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-medium">{user?.name}</span>
-                    <span className="truncate text-xs">{user?.email}</span>
->>>>>>> working
                   </div>
                 </div>
               </Link>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-<<<<<<< HEAD
             {/* <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Sparkles />
@@ -101,8 +91,6 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator /> */}
-=======
->>>>>>> working
             <DropdownMenuGroup>
               <Link
                 to="/profile"
@@ -110,11 +98,7 @@ export function NavUser() {
               >
                 <DropdownMenuItem>
                   <BadgeCheck />
-<<<<<<< HEAD
                   My Profile
-=======
-                  Account
->>>>>>> working
                 </DropdownMenuItem>
               </Link>
             </DropdownMenuGroup>

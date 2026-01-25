@@ -13,7 +13,7 @@ const ChatWindow = ({
 }) => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [score, setScore] = useState(
-    messages.reduce((sum, m) => sum + (m.aiAnalysis?.score || 0), 0)
+    messages.reduce((sum, m) => sum + (m.aiAnalysis?.score || 0), 0),
   );
 
   useEffect(() => {
@@ -39,7 +39,6 @@ const ChatWindow = ({
         />
       </header>
       <div className="h-full z-20 w-full px-[10rem] p-5 overflow-y-scroll border">
-<<<<<<< HEAD
         <div className="flex flex-col gap-5">
           {messages
             ? messages.map((msg, idx) => (
@@ -48,21 +47,6 @@ const ChatWindow = ({
                 </div>
               ))
             : null}
-=======
-        <div className="flex flex-col gap-5 mt-16">
-          {messages &&
-            messages.map((msg, idx) => (
-              <div key={msg.messageId + idx}>
-                <CompChatBubble
-                  isCtxWindowOpen={isCtxWindowOpen}
-                  setIsCtxWindowOpen={setIsCtxWindowOpen}
-                  setMessageErrorCtx={setMessageErrorCtx}
-                  msg={msg}
-                />
-              </div>
-            ))}
-          <div ref={bottomRef} className="h-[8rem]" />
->>>>>>> working
         </div>
       </div>
     </>

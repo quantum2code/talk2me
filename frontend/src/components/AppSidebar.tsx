@@ -23,12 +23,8 @@ import {
 import { NavUser } from "./NavUser";
 import LogoSVG from "./LogoSVG";
 import { Button } from "./ui/button";
-<<<<<<< HEAD
 import { Link } from "react-router";
 import { BsSoundwave } from "react-icons/bs";
-=======
-import { Link, useLocation } from "react-router";
->>>>>>> working
 
 // This is sample data.
 // const data = {
@@ -47,11 +43,7 @@ import { Link, useLocation } from "react-router";
 
 export function AppSidebar({
   data,
-<<<<<<< HEAD
   startNewConv,
-=======
-  startConversation,
->>>>>>> working
   ...props
 }: {
   data: {
@@ -72,11 +64,7 @@ export function AppSidebar({
         | undefined;
     }>;
   };
-<<<<<<< HEAD
   startNewConv: () => void;
-=======
-  startConversation: () => void;
->>>>>>> working
 } & React.ComponentProps<typeof Sidebar>) {
   const location = useLocation();
   return (
@@ -85,14 +73,9 @@ export function AppSidebar({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-<<<<<<< HEAD
               <a href="#">
                 <div className="bg-sidebar-accent text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   {/* <GalleryVerticalEnd className="size-4" /> */}
-=======
-              <a href="/">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
->>>>>>> working
                   <LogoSVG classname="w-4 h-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
@@ -108,14 +91,9 @@ export function AppSidebar({
           <Button
             variant={"cta"}
             className="border-2 border-white/20"
-<<<<<<< HEAD
             onClick={startNewConv}
           >
             <BsSoundwave />
-=======
-            onClick={startConversation}
-          >
->>>>>>> working
             Start new Chat
           </Button>
         </SidebarGroup>
