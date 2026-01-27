@@ -14,6 +14,7 @@ import ChatWindow from "@/components/ChatWindow";
 import { startConversation } from "@/utils/axios";
 import { useNavigate } from "react-router";
 import RecordingBtn from "@/components/RecordingBtn";
+import { authClient } from "@/hooks/useAuth";
 
 function App() {
   const { stream, requestPermission } = useMicrophone();
@@ -167,6 +168,14 @@ function App() {
               Stop
             </Button>
           </div> */}
+          <div className="absolute top-6 left-8 z-20">
+            <h1 className="text-2xl font-semibold p-20 text-foreground/60">
+              <span className="text-foreground">
+                Hello, {authClient.useSession().data?.user?.name || "Guest"},
+              </span>
+              What's in your mind?
+            </h1>
+          </div>
         </SidebarInset>
       </SidebarProvider>
     </div>
