@@ -25,3 +25,10 @@
   - ```npm run dev -w frontend```
 - ***Backend***
   - ```npm run dev -w backend```
+ 
+  - 
+## 👥 Contributors
+
+Thanks to all the amazing people who contribute to this project!
+
+[![Contributors](https://contrib.rocks/image?repo=quantum2code/talk2me)](https://github.com/quantum2code/talk2me/graphs/contributors)
