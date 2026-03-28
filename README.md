@@ -1,6 +1,6 @@
 # 🗣️ Talk2Me – AI Speech Practice App
 
-**Talk2Me** is an AI-powered mobile/web app designed to help users improve their spoken English through real-time speech analysis. Record your voice, get accurate transcriptions, and receive personalized feedback on grammar, fluency
+**Talk2Me** is an AI-powered mobile/web app designed to help users improve their spoken English through real-time speech analysis. Record your voice, get accurate transcriptions, and receive personalized feedback on grammar
 
 ---
 
